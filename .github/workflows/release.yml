@@ -379,20 +379,25 @@ jobs:
           merge-multiple: true
       - name: Check the asset names
         working-directory: artifacts
+        env:
+          # Atelier: only the platforms this run built (see the comment at the top).
+          PLATFORMS: ${{ vars.ATELIER_RELEASE_PLATFORMS }}
         run: |
-          expected=(
-            "artcraft-launcher-$VERSION-macos-universal.dmg"
-            "artcraft-launcher-$VERSION-freebsd-x86_64.tar.gz"
-            "artcraft-launcher-web-$VERSION.zip"
-          )
-          for a in x64 x86 arm64; do
-            expected+=("artcraft-launcher-$VERSION-windows-$a.msi" "artcraft-launcher-$VERSION-windows-$a-portable.zip")
-          done
-          for a in x86_64 aarch64; do
-            for ext in AppImage AppImage.zsync deb rpm tar.gz flatpak; do
-              expected+=("artcraft-launcher-$VERSION-linux-$a.$ext")
-            done
-          done
+          expected=("artcraft-launcher-$VERSION-macos-universal.dmg")
+          case " $PLATFORMS " in *freebsd*) expected+=("artcraft-launcher-$VERSION-freebsd-x86_64.tar.gz") ;; esac
+          case " $PLATFORMS " in *web*) expected+=("artcraft-launcher-web-$VERSION.zip") ;; esac
+          case " $PLATFORMS " in *windows*)
+            for a in x64 x86 arm64; do
+              expected+=("artcraft-launcher-$VERSION-windows-$a.msi" "artcraft-launcher-$VERSION-windows-$a-portable.zip")
+            done ;;
+          esac
+          case " $PLATFORMS " in *linux*)
+            for a in x86_64 aarch64; do
+              for ext in AppImage AppImage.zsync deb rpm tar.gz flatpak; do
+                expected+=("artcraft-launcher-$VERSION-linux-$a.$ext")
+              done
+            done ;;
+          esac
           missing=0
           for f in "${expected[@]}"; do
             if [ ! -f "$f" ]; then echo "::error::missing release asset $f"; missing=1; fi
