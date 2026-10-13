@@ -543,9 +543,17 @@ pub mod macos {
     }
 
     fn copy_app(app: &CraftApp, mount: &Path, existing: Option<&Installed>) -> Result<PathBuf, String> {
-        let bundle = format!("{}.app", app.bundle);
-        let src = mount.join(&bundle);
-        crate::detect::macos::read_bundle(app, &src).ok_or("the disk image doesn't contain the app")?;
+        // Atelier releases name the bundle after the product; earlier ones used upstream's name.
+        let (bundle, src) = app
+            .mac_bundle_names()
+            .into_iter()
+            .map(|name| format!("{name}.app"))
+            .map(|bundle| {
+                let src = mount.join(&bundle);
+                (bundle, src)
+            })
+            .find(|(_, src)| crate::detect::macos::read_bundle(app, src).is_some())
+            .ok_or("the disk image doesn't contain the app")?;
         let dir = applications_dir(existing)?;
         let dest = dir.join(&bundle);
         let staged = dir.join(format!(".{bundle}.partial"));
@@ -562,6 +570,16 @@ pub mod macos {
             return Err("the copied app is incomplete".into());
         }
         swap_into_place(&staged, &dest)?;
+        // An update that renames the bundle (PhotoCraft.app → Atelier Pigment.app) leaves the old
+        // copy behind: move it to the Trash, where it can still be put back.
+        if let Some(old) = existing.filter(|i| i.source == InstallSource::MacApp).map(|i| PathBuf::from(&i.location))
+            && old != dest
+            && old.extension().is_some_and(|e| e == "app")
+            && crate::detect::macos::read_bundle(app, &old).is_some()
+        {
+            // Not fatal: the new copy is in place; the old one only takes space.
+            let _ = move_to_trash(&old);
+        }
         Ok(dest)
     }
 

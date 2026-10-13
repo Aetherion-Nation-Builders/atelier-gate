@@ -56,7 +56,18 @@ file overrides it where they differ, e.g. on where downloads come from).
 | Icons | `assets/app-icon/` (ours: `artcraft-launcher.svg` is the master, `packaging/icons.sh` renders the rest), `assets/app-icons/` (each Atelier app's icon) |
 | README and NOTICE | README: our header above upstream's feature sections; NOTICE: ours on top of theirs, kept on merge by `.gitattributes` |
 
-For the packaging pass (real installers): the macOS `.app` bundle, executable and DMG names
-(`packaging/macos/package.sh`, `verify.sh`, and `self_update.rs` with them), the package scripts'
-messages and file names, the Linux package maintainer, the AppStream brand colours, and the
-release titles in `release.yml`.
+## Releases
+
+`release.yml` builds the macOS DMG only for now, on the standard `macos-15` runner, unsigned until
+the Apple signing secrets are added; the other platform jobs stay and run when named in the
+repository variable `ATELIER_RELEASE_PLATFORMS`. The bundle is `Atelier Gate.app` (the executable
+and icon inside keep `ArtCraft Launcher`) on an "Atelier Gate <version>" volume, and the draft is
+"Atelier Gate v<version>".
+
+Gate finds and installs a macOS app under its Atelier bundle name first (`Atelier Pigment.app`)
+and then upstream's (`PhotoCraft.app`, what releases before each app's Atelier installer used):
+`CraftApp::mac_bundle_names`. When an update renames the bundle, the old copy goes to the Trash.
+Its own self-update works the same way (`ArtCraft Launcher.app` → `Atelier Gate.app`).
+
+Still for the packaging pass: Windows and Linux installers, signing, the package scripts' messages
+and maintainer, and the AppStream brand colours.

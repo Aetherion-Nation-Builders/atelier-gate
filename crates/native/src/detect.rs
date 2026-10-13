@@ -72,12 +72,17 @@ pub mod macos {
 
     use super::*;
 
-    /// Where a `.app` might be: the system and the user's Applications folders.
+    /// Where a `.app` might be: the system and the user's Applications folders, under its Atelier
+    /// name first, then upstream's (`CraftApp::mac_bundle_names`).
     pub fn candidates(app: &CraftApp) -> Vec<PathBuf> {
-        let bundle = format!("{}.app", app.bundle);
-        let mut out = vec![Path::new("/Applications").join(&bundle)];
-        if let Some(home) = dirs::home_dir() {
-            out.push(home.join("Applications").join(&bundle));
+        let home = dirs::home_dir().map(|h| h.join("Applications"));
+        let mut out = Vec::new();
+        for name in app.mac_bundle_names() {
+            let bundle = format!("{name}.app");
+            out.push(Path::new("/Applications").join(&bundle));
+            if let Some(home) = &home {
+                out.push(home.join(&bundle));
+            }
         }
         out
     }

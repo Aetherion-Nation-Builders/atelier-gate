@@ -25,5 +25,6 @@ the rename. Three things need a look on every sync, because upstream changes the
 CI here is upstream's: `ci.yml` (tests, clippy and the wasm check) on every pull request, and
 packaging lint on pull requests that touch packaging, workflows or the app icon. Turned off in
 this repository, on purpose (they cost Actions minutes and build things we do not ship yet):
-`release.yml`, `freebsd.yml` and `windows-arm64.yml`. Turn one on from the Actions tab when it is
-wanted.
+`freebsd.yml` and `windows-arm64.yml`. Turn one on from the Actions tab when it is wanted.
+`release.yml` builds the macOS DMG only for now (`docs/brand.md` › Releases); when syncing, keep
+our lines in it and in `packaging/macos/package.sh` and `verify.sh`.
