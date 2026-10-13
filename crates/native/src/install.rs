@@ -543,7 +543,7 @@ pub mod macos {
     }
 
     fn copy_app(app: &CraftApp, mount: &Path, existing: Option<&Installed>) -> Result<PathBuf, String> {
-        let bundle = format!("{}.app", app.name);
+        let bundle = format!("{}.app", app.bundle);
         let src = mount.join(&bundle);
         crate::detect::macos::read_bundle(app, &src).ok_or("the disk image doesn't contain the app")?;
         let dir = applications_dir(existing)?;

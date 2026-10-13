@@ -1,12 +1,12 @@
-# Simplified Chinese (zh-CN) catalog for ArtCraft Launcher.
+# Simplified Chinese (zh-CN) catalog for Atelier Gate.
 # Format: context<TAB>English source<TAB>translation.
-# Original translations from the English UI. Product and app names (ArtCraft Launcher and its
-# "Launcher" tag, Craft App Suite, PhotoCraft…) and third-party names stay unchanged.
+# Original translations from the English UI. Product and app names (Atelier Gate and its "Gate"
+# tag, Atelier, Aetherion Nation, Nation, Pigment…) and third-party names stay unchanged.
 # Shown with the system's Chinese font (PingFang, Microsoft YaHei, Noto Sans CJK…): see cjk_font.rs.
 # Chinese has one plural form. Placeholders and trailing ellipses are preserved.
 
-	Launcher	Launcher
-	Craft App Suite	Craft App Suite
+	Gate	Gate
+	Aetherion Nation	Aetherion Nation
 	Open Source Tools for Creatives, Makers, and Builders	为创作者和开发者打造的开源工具
 	Settings	设置
 	Check for updates	检查更新
@@ -26,7 +26,7 @@
 	Installed version	已安装版本
 	Latest version	最新版本
 	Newest release	发布日期
-	Discord	Discord
+	Nation	Nation
 	GitHub	GitHub
 	Website	网站
 	Classic apps	经典应用
@@ -56,7 +56,7 @@
 	Reinstall	重新安装
 	Uninstall…	卸载…
 	All releases	所有版本
-	ArtCraft Launcher {version} is available.	ArtCraft Launcher {version} 已可更新。
+	Atelier Gate {version} is available.	Atelier Gate {version} 已可更新。
 	Dismiss	忽略
 	Update and restart	更新并重启
 	What's new	更新内容
@@ -64,7 +64,7 @@
 	Released {date}	发布于 {date}
 	Open on GitHub	在 GitHub 上打开
 	Close	关闭
-	ArtCraft Launcher {version}	ArtCraft Launcher {version}
+	Atelier Gate {version}	Atelier Gate {version}
 	Only when I ask	仅手动检查
 	Notify me when an installed app has an update	已安装应用有更新时通知我
 	Include pre-releases (betas and release candidates)	包含预发布版本（测试版和候选版）
@@ -75,11 +75,11 @@
 	Running in the background	后台运行
 	Keep running in the tray when the window is closed	关闭窗口后继续在系统托盘中运行
 	Show the window on the current desktop	在当前桌面显示窗口
-	Start ArtCraft Launcher when I log in	登录时启动 ArtCraft Launcher
+	Start Atelier Gate when I log in	登录时启动 Atelier Gate
 	Community	社区
-	Questions, ideas and news from the ArtCraft team	与 ArtCraft 团队交流问题、想法和动态
+	Atelier is part of Aetherion Nation	Atelier 是 Aetherion Nation 的一部分
 	Appearance	外观
-	Quit ArtCraft Launcher	退出 ArtCraft Launcher
+	Quit Atelier Gate	退出 Atelier Gate
 	Done	完成
 	Uninstall {name}?	卸载 {name}？
 	The app will be moved to the Trash. Your documents and settings stay.	应用将移到废纸篓。你的文档和设置会保留。
@@ -109,8 +109,8 @@ month	Dec	12月
 	Installing for {platform}	安装平台：{platform}
 	Downloads for {platform}	下载平台：{platform}
 	No downloads for this system	此系统暂无可用下载
-	Join the ArtCraft community on Discord	加入 Discord 上的 ArtCraft 社区
-	ArtCraft on {name}	ArtCraft 的 {name} 主页
+	Join the Nation (aetherionnnation.com)	加入 Nation（aetherionnnation.com）
+	Aetherion Nation on {name}	Aetherion Nation 的 {name} 主页
 	Available to install	可安装
 	Available	可用
 	Installed · up to date	已安装 · 已是最新
@@ -126,7 +126,7 @@ month	Dec	12月
 	Version {version} installed	已安装版本 {version}
 	Version {latest}	版本 {latest}
 	No release published yet	尚未发布版本
-	ArtCraft Launcher	ArtCraft Launcher
+	Atelier Gate	Atelier Gate
 	App	应用
 	Latest	最新
 	Released	发布日期
@@ -148,7 +148,7 @@ month	Dec	12月
 	Couldn't check for updates: {f}	无法检查更新：{f}
 	Website (coming soon)	网站（即将上线）
 	GitHub repository	GitHub 仓库
-	ArtCraft	ArtCraft
+	Release feed	发布信息源
 	Update 1 app	更新 1 个应用
 	Update all ({count})	全部更新（{count}）
 	⊞  Grid	⊞  网格
@@ -161,7 +161,7 @@ month	Dec	12月
 	Full changelog	完整更新日志
 	link	链接
 	No apps match	没有匹配的应用
-	Open ArtCraft Launcher to update.	打开 ArtCraft Launcher 进行更新。
+	Open Atelier Gate to update.	打开 Atelier Gate 进行更新。
 	{name} {v} is available	{name} {v} 已可更新
 	{count} updates are available	有 {count} 个可用更新
 	These notes weren't fetched (GitHub's request limit was reached). They're on the release page.	未能获取更新说明（已达到 GitHub 请求上限）。可前往版本发布页面查看。
@@ -191,7 +191,7 @@ filter	Installed	已安装
 @id	launcher.notes	更新内容
 @id	launcher.dismiss	忽略
 @id	settings.open	设置
-@id	settings.quit	退出 ArtCraft Launcher
+@id	settings.quit	退出 Atelier Gate
 @id	view.grid	网格
 @id	view.table	表格
 @id	filter.all	全部
@@ -205,7 +205,7 @@ filter	Installed	已安装
 @id	sort.installed	已安装版本
 @id	sort.latest	最新版本
 @id	sort.released	发布日期
-@id	help.discord	Discord
+@id	help.discord	Nation
 @id	help.github	GitHub
 @id	help.website	网站
 @id	update.check	检查更新
@@ -215,23 +215,22 @@ filter	Installed	已安装
 @id	linux.preferred_kind	新应用安装格式
 @id	tray.close_to_tray	关闭窗口后继续在系统托盘中运行
 @id	tray.show_on_current_desktop	在当前桌面显示窗口
-@id	tray.login_item	登录时启动 ArtCraft Launcher
+@id	tray.login_item	登录时启动 Atelier Gate
 @id	appearance.theme	外观
 	Update	更新
 	New	新
 	Classic	经典
-	Join the Discord	加入 Discord
+	Join the Nation	加入 Nation
 	Minimize	最小化
 	Maximize	最大化
 	Restore	还原
 	Show in Finder	在访达中显示
 	Show in Explorer	在资源管理器中显示
-	Show ArtCraft Launcher	显示 ArtCraft Launcher
+	Show Atelier Gate	显示 Atelier Gate
 	Check for Updates	检查更新
-	Visit getartcraft.com	访问 getartcraft.com
-	ArtCraft on GitHub	ArtCraft 的 GitHub 主页
-	Join the ArtCraft Discord	加入 ArtCraft Discord 社区
-@plural	ArtCraft Launcher · {n} update available|ArtCraft Launcher · {n} updates available	ArtCraft Launcher · 有 {n} 个可用更新
+	Visit aetherionnnation.com	访问 aetherionnnation.com
+	Atelier on GitHub	Atelier 的 GitHub 主页
+@plural	Atelier Gate · {n} update available|Atelier Gate · {n} updates available	Atelier Gate · 有 {n} 个可用更新
 @plural	{n} app|{n} apps	{n} 个应用
 photocraft	Image editing	图像编辑
 vectorcraft	Vector illustration	矢量插画
@@ -247,7 +246,7 @@ cadcraft	Computer-aided design and drafting	计算机辅助设计与制图
 soundcraft	Recording, editing and mixing audio	音频录制、编辑与混音
 
 	Show in Files	在文件管理器中显示
-	Loading ArtCraft Launcher…	正在加载 ArtCraft Launcher…
+	Loading Atelier Gate…	正在加载 Atelier Gate…
 	Download cancelled	下载已取消
 	Automatically	自动
 	Checked {ago} · using {sources}	上次检查：{ago} · 来源：{sources}
@@ -257,7 +256,7 @@ soundcraft	Recording, editing and mixing audio	音频录制、编辑与混音
 	Open link	打开链接
 	{name} icon	{name} 图标
 	installed	已安装
-	Every Craft app	所有 Craft 应用
+	Every Atelier app	所有 Atelier 应用
 	Apps on this computer	此电脑上的应用
 	Installed apps with a newer version	有新版本的已安装应用
 	Apps you can install	可安装的应用

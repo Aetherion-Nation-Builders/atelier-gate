@@ -72,8 +72,8 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           $msi = (Get-ChildItem dist/*.msi | Select-Object -First 1).FullName
-          $startLnk = Join-Path ([Environment]::GetFolderPath('Programs')) 'ArtCraft Launcher.lnk'
-          $deskLnk = Join-Path ([Environment]::GetFolderPath('Desktop')) 'ArtCraft Launcher.lnk'
+          $startLnk = Join-Path ([Environment]::GetFolderPath('Programs')) 'Atelier Gate.lnk'
+          $deskLnk = Join-Path ([Environment]::GetFolderPath('Desktop')) 'Atelier Gate.lnk'
           $key = 'HKCU:\Software\Learning Machines LLC\ArtCraft Launcher'
           function Install([string[]] $props) {
             $p = Start-Process msiexec.exe -ArgumentList (@('/i', "`"$msi`"", '/qn', '/l*v', 'install.log') + $props) -Wait -PassThru
@@ -89,9 +89,9 @@ jobs:
           function Expect([bool] $ok, [string] $what) { if (-not $ok) { Get-Content install.log -Tail 60; throw $what }; Write-Output "ok $what" }
 
           # 1. A first install with the defaults, as the wizard's Next, Next, Install does:
-          #    %LOCALAPPDATA%\Programs\ArtCraft Launcher, with the Start Menu and desktop shortcuts.
+          #    %LOCALAPPDATA%\Programs\Atelier Gate, with the Start Menu and desktop shortcuts.
           Install @()
-          $exe = Join-Path $env:LOCALAPPDATA 'Programs\ArtCraft Launcher\artcraft-launcher.exe'
+          $exe = Join-Path $env:LOCALAPPDATA 'Programs\Atelier Gate\artcraft-launcher.exe'
           Expect (Test-Path $exe) "installed in the default folder: $exe"
           $bytes = [System.IO.File]::ReadAllBytes($exe)
           $machine = [BitConverter]::ToUInt16($bytes, [BitConverter]::ToInt32($bytes, 0x3C) + 4)
@@ -102,7 +102,7 @@ jobs:
           Uninstall $exe
 
           # 2. A folder of the user's choosing, without the desktop shortcut.
-          $dir = Join-Path $env:LOCALAPPDATA 'ArtCraft Launcher Test Folder'
+          $dir = Join-Path $env:LOCALAPPDATA 'Atelier Gate Test Folder'
           Install @("INSTALLFOLDER=`"$dir\`"", 'INSTALLDESKTOPSHORTCUT=0')
           $exe = Join-Path $dir 'artcraft-launcher.exe'
           Expect (Test-Path $exe) "installed in the chosen folder: $exe"

@@ -74,7 +74,7 @@ pub mod macos {
 
     /// Where a `.app` might be: the system and the user's Applications folders.
     pub fn candidates(app: &CraftApp) -> Vec<PathBuf> {
-        let bundle = format!("{}.app", app.name);
+        let bundle = format!("{}.app", app.bundle);
         let mut out = vec![Path::new("/Applications").join(&bundle)];
         if let Some(home) = dirs::home_dir() {
             out.push(home.join("Applications").join(&bundle));
@@ -95,7 +95,7 @@ pub mod macos {
         }
         // `<App>Version` carries the full version including a pre-release suffix;
         // CFBundleShortVersionString only has the numbers.
-        let full_key = format!("{}Version", app.name);
+        let full_key = format!("{}Version", app.bundle);
         let text =
             [full_key.as_str(), "CFBundleShortVersionString", "CFBundleVersion"].iter().find_map(|k| dict.get(k).and_then(plist::Value::as_string));
         Some(Installed { version: text.and_then(version::parse), source: InstallSource::MacApp, location: path.display().to_string(), package: None })
@@ -112,7 +112,8 @@ pub mod windows {
     use super::*;
 
     const UNINSTALL: &str = r"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
-    const PUBLISHER: &str = "Learning Machines LLC";
+    /// The publisher the Atelier apps' installers register (upstream: Learning Machines LLC).
+    const PUBLISHER: &str = "Aetherion Nation";
 
     /// An MSI install found in the registry.
     pub struct MsiInstall {
@@ -130,7 +131,7 @@ pub mod windows {
                 let Ok(key) = root.open_subkey_with_flags(&code, KEY_READ | flags) else { continue };
                 let name: String = key.get_value("DisplayName").unwrap_or_default();
                 let publisher: String = key.get_value("Publisher").unwrap_or_default();
-                if name != app.name || publisher != PUBLISHER || out.iter().any(|m: &MsiInstall| m.product_code == code) {
+                if name != app.product || publisher != PUBLISHER || out.iter().any(|m: &MsiInstall| m.product_code == code) {
                     continue;
                 }
                 let version = key.get_value::<String, _>("DisplayVersion").ok().and_then(|v| version::parse(&v));
@@ -165,7 +166,7 @@ pub mod windows {
         let mut dirs: Vec<PathBuf> = location.into_iter().collect();
         for var in ["ProgramW6432", "ProgramFiles", "ProgramFiles(x86)"] {
             if let Some(pf) = std::env::var_os(var) {
-                dirs.push(PathBuf::from(pf).join(app.name));
+                dirs.push(PathBuf::from(pf).join(app.product));
             }
         }
         dirs.into_iter().map(|d| d.join(&exe)).find(|p| p.exists())
@@ -176,7 +177,7 @@ pub mod windows {
         Some(Installed {
             version: m.version,
             source: InstallSource::Msi,
-            location: m.exe.map_or_else(|| app.name.to_string(), |p| p.display().to_string()),
+            location: m.exe.map_or_else(|| app.product.to_string(), |p| p.display().to_string()),
             package: Some(m.product_code),
         })
     }

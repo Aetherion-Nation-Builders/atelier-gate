@@ -9,9 +9,9 @@
   <key>CFBundleDevelopmentRegion</key>
   <string>en</string>
   <key>CFBundleDisplayName</key>
-  <string>ArtCraft Launcher</string>
+  <string>Atelier Gate</string>
   <key>CFBundleName</key>
-  <string>ArtCraft Launcher</string>
+  <string>Atelier Gate</string>
   <key>CFBundleExecutable</key>
   <string>ArtCraft Launcher</string>
   <key>CFBundleIdentifier</key>
@@ -44,6 +44,6 @@
   <key>NSRequiresAquaSystemAppearance</key>
   <false/>
   <key>NSHumanReadableCopyright</key>
-  <string>Copyright © 2026 ArtCraft Team and the ArtCraft Launcher contributors. MIT OR Apache-2.0.</string>
+  <string>Copyright © 2026 Aetherion Nation and the ArtCraft Launcher contributors. MIT OR Apache-2.0.</string>
 </dict>
 </plist>
