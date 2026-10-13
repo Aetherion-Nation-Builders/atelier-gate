@@ -105,7 +105,7 @@ pub const INSTALL_CANCELLED: &str = "install cancelled";
 /// Which service an app's release information came from (the footer names them).
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum Origin {
-    /// ArtCraft's release feed (storyteller-web), which polls GitHub for everyone.
+    /// A release feed (upstream: ArtCraft's storyteller-web), when one is configured.
     ArtCraftApi,
     /// GitHub directly: the fallback.
     GitHub,
@@ -114,7 +114,7 @@ pub enum Origin {
 impl Origin {
     pub fn label(self) -> &'static str {
         match self {
-            Self::ArtCraftApi => "ArtCraft API",
+            Self::ArtCraftApi => "Release feed",
             Self::GitHub => "GitHub",
         }
     }
@@ -123,7 +123,7 @@ impl Origin {
 /// Where release information came from.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Source {
-    /// ArtCraft's release feed (storyteller-web), which polls GitHub for everyone.
+    /// A release feed, when one is configured.
     Feed,
     /// The GitHub REST API.
     GitHubApi,
@@ -136,7 +136,7 @@ pub enum Source {
 impl Source {
     pub fn label(self) -> &'static str {
         match self {
-            Self::Feed => "ArtCraft",
+            Self::Feed => "Release feed",
             Self::GitHubApi => "GitHub",
             Self::GitHubPages => "GitHub (release pages)",
             Self::Cache => "saved results",

@@ -143,7 +143,8 @@ impl NativeBackend {
     /// release feed's where they're still fresh, GitHub's otherwise.
     fn replay_cache(&self) {
         let pre = self.options().prereleases;
-        let feed = if pre { None } else { load_feed(&self.paths) };
+        // A feed saved while one was configured is only trusted while one still is.
+        let feed = if pre || feed_url().is_none() { None } else { load_feed(&self.paths) };
         let now = crate::now();
         for app in &SUITE {
             let answer = match feed.as_ref().map(|f| f.answer(app, now)) {
@@ -314,7 +315,7 @@ impl NativeBackend {
             restarting
         };
         if restarting {
-            let result = Err("ArtCraft Launcher is restarting to finish its update. Try again once it's back.".into());
+            let result = Err("Atelier Gate is restarting to finish its update. Try again once it's back.".into());
             self.shared.emit(Event::JobFinished { app: app.id.to_string(), result });
             return;
         }
@@ -383,7 +384,7 @@ impl NativeBackend {
         let (Some(install), Some(platform)) = (self.self_install.clone(), self.platform) else {
             self.shared.emit(Event::JobFinished {
                 app: id,
-                result: Err("this copy of ArtCraft Launcher can't update itself; download the new version instead".into()),
+                result: Err("this copy of Atelier Gate can't update itself; download the new version instead".into()),
             });
             return;
         };
@@ -553,7 +554,7 @@ fn restart_blocked(mut busy: Vec<&str>) -> String {
         _ => (busy.join(", "), "were", "them"),
     };
     format!(
-        "ArtCraft Launcher didn't restart to update: {names} {were} still installing. Answer or close any password prompt, \
+        "Atelier Gate didn't restart to update: {names} {were} still installing. Answer or close any password prompt, \
          let {them} finish or cancel {them}, then press Update and restart again."
     )
 }
@@ -621,7 +622,10 @@ fn feed_and_fallback(http: &Http, paths: &Paths, shared: &Shared) -> (Option<Fee
     let loaded = shared.loaded.load(Ordering::SeqCst);
     let first_time = !loaded && saved.is_none();
     let attempts = if first_time { 1 } else { FEED_ATTEMPTS };
-    let fetched = fetch_feed(http, paths, &feed_url(), &shared.feed_throttle, attempts);
+    let Some(url) = feed_url() else {
+        return (None, no_feed_fallback(loaded));
+    };
+    let fetched = fetch_feed(http, paths, &url, &shared.feed_throttle, attempts);
     let now = crate::now();
     let (fresh, answered, failures) = {
         let mut failures = shared.feed_failures.lock().unwrap_or_else(PoisonError::into_inner);
@@ -642,6 +646,12 @@ fn feed_and_fallback(http: &Http, paths: &Paths, shared: &Shared) -> (Option<Fee
     let ok_at = *shared.feed_ok_at.lock().unwrap_or_else(PoisonError::into_inner);
     let fallback = decide_fallback(answered, loaded, first_time, failures, ok_at, now);
     (fresh.or(saved), fallback)
+}
+
+/// With no feed configured, GitHub is the only source: asked freely until every app has loaded
+/// once, then hourly per app.
+fn no_feed_fallback(loaded: bool) -> Fallback {
+    Fallback { trust_feed: false, github_every: if loaded { GITHUB_FALLBACK_EVERY } else { EARLY_GITHUB_EVERY } }
 }
 
 /// The policy in [`feed_and_fallback`], on its own so it can be tested.
@@ -704,7 +714,7 @@ enum FeedFetch {
     Held,
 }
 
-/// Asks ArtCraft's release feed up to `attempts` times, as often as `throttle` allows (waiting at
+/// Asks the release feed up to `attempts` times, as often as `throttle` allows (waiting at
 /// most [`MAX_THROTTLE_WAIT`] for it), saving a good answer.
 fn fetch_feed(http: &Http, paths: &Paths, url: &str, throttle: &Mutex<FeedThrottle>, attempts: usize) -> FeedFetch {
     let mut asked = false;
@@ -712,7 +722,7 @@ fn fetch_feed(http: &Http, paths: &Paths, url: &str, throttle: &Mutex<FeedThrott
         let wait = throttle.lock().unwrap_or_else(PoisonError::into_inner).wait(crate::now());
         if wait > MAX_THROTTLE_WAIT {
             if !asked {
-                log::info!("holding off the ArtCraft API for {wait} s");
+                log::info!("holding off the release feed for {wait} s");
             }
             break;
         }
@@ -743,7 +753,7 @@ fn fetch_feed(http: &Http, paths: &Paths, url: &str, throttle: &Mutex<FeedThrott
                 }
             },
             Err(e) if e.throttled => {
-                log::warn!("the ArtCraft API asked us to slow down (HTTP 429); holding off");
+                log::warn!("the release feed asked us to slow down (HTTP 429); holding off");
                 Outcome::Throttled { retry_after: e.retry_after }
             }
             Err(e) => {
@@ -759,13 +769,18 @@ fn fetch_feed(http: &Http, paths: &Paths, url: &str, throttle: &Mutex<FeedThrott
     if asked { FeedFetch::Failed } else { FeedFetch::Held }
 }
 
-/// The feed's address. `ARTCRAFT_LAUNCHER_FEED_URL` points at a staging server or a local copy
-/// (only `https://`, or plain `http://` on localhost).
-fn feed_url() -> String {
-    std::env::var("ARTCRAFT_LAUNCHER_FEED_URL")
-        .ok()
+/// The feed's address, if there is one. `ARTCRAFT_LAUNCHER_FEED_URL` points at a feed server or a
+/// local copy (only `https://`, or plain `http://` on localhost); without it Atelier Gate uses no
+/// feed ([`artcraft_launcher_core::feed::FEED_URL`] is unset) and asks GitHub.
+fn feed_url() -> Option<String> {
+    feed_address(std::env::var("ARTCRAFT_LAUNCHER_FEED_URL").ok(), artcraft_launcher_core::feed::FEED_URL)
+}
+
+/// [`feed_url`]'s rule, on its own so it can be tested.
+fn feed_address(configured: Option<String>, default: Option<&str>) -> Option<String> {
+    configured
         .filter(|u| u.starts_with("https://") || u.starts_with("http://127.0.0.1:") || u.starts_with("http://localhost:"))
-        .unwrap_or_else(|| artcraft_launcher_core::feed::FEED_URL.to_string())
+        .or_else(|| default.map(str::to_string))
 }
 
 /// The last saved feed answer, if any.
@@ -999,10 +1014,23 @@ mod tests {
     fn feed() -> Feed {
         Feed::parse(
             r#"{"release_info": {"apps": {
-            "photocraft": {"repo": "storytold/photocraft", "latest_release": {"tag": "v0.6.0"}, "app_last_fetched": "2026-10-09T13:00:00Z"}
+            "photocraft": {"repo": "Aetherion-Nation-Builders/atelier-pigment", "latest_release": {"tag": "v0.6.0"}, "app_last_fetched": "2026-10-09T13:00:00Z"}
         }}}"#,
         )
         .unwrap()
+    }
+
+    #[test]
+    fn atelier_gate_uses_no_feed_unless_one_is_configured() {
+        assert_eq!(artcraft_launcher_core::feed::FEED_URL, None);
+        assert_eq!(feed_address(None, None), None);
+        assert_eq!(feed_address(Some("ftp://feed.example".into()), None), None);
+        assert_eq!(feed_address(Some("https://feed.example/x".into()), None).as_deref(), Some("https://feed.example/x"));
+        assert_eq!(feed_address(Some("http://localhost:8080/x".into()), None).as_deref(), Some("http://localhost:8080/x"));
+        assert_eq!(feed_address(None, Some("https://default.example")).as_deref(), Some("https://default.example"));
+        // Without a feed GitHub answers: freely until every app has loaded, then hourly.
+        assert_eq!(no_feed_fallback(false), Fallback { trust_feed: false, github_every: EARLY_GITHUB_EVERY });
+        assert_eq!(no_feed_fallback(true), Fallback { trust_feed: false, github_every: GITHUB_FALLBACK_EVERY });
     }
 
     #[test]
@@ -1228,7 +1256,7 @@ mod tests {
         }
         let restarting = AtomicBool::new(false);
         let error = claim_restart(&jobs, &restarting, &Stop::default(), Duration::from_millis(300), &mut || {}).unwrap_err();
-        assert!(error.contains("PhotoCraft was still installing") && error.contains("cancel it"), "{error}");
+        assert!(error.contains("Pigment was still installing") && error.contains("cancel it"), "{error}");
         assert!(!restarting.load(Ordering::SeqCst));
         assert!(restart_blocked(vec!["WordCraft", "FilmCraft"]).contains("FilmCraft, WordCraft were still installing"));
     }

@@ -19,8 +19,11 @@ use crate::release::{self, Asset, Release};
 use crate::time::parse_rfc3339;
 use crate::version;
 
-/// Where the feed lives.
-pub const FEED_URL: &str = "https://api.storyteller.ai/v1/craft_apps/release_info";
+/// Where the feed lives: nowhere by default in Atelier Gate. Upstream points this at ArtCraft's
+/// own service (`https://api.storyteller.ai/v1/craft_apps/release_info`), which describes the
+/// storytold repos, not the Nation's; Gate asks GitHub about the Atelier repos directly instead.
+/// A feed can still be used by setting `ARTCRAFT_LAUNCHER_FEED_URL` (see `native::backend`).
+pub const FEED_URL: Option<&str> = None;
 
 /// An app's entry is trusted for this long after storyteller-web fetched it.
 pub const MAX_AGE: i64 = 24 * 3600;
@@ -413,14 +416,14 @@ fn truncate(s: &str, max: usize) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::catalog::{CraftApp, LAUNCHER};
+    use crate::catalog::{CraftApp, LAUNCHER, SUITE};
 
     const NOW: i64 = 1_791_500_000; // 2026-10-09T…
     const HASH: &str = "8a5edab282632443219e051e4ade2d1d5bbc671c781051bf1437897cbdfea0f1";
 
     /// What storyteller-web serves (its `GetCraftAppsReleaseInfoResponse`), abridged.
     fn sample() -> String {
-        format!(
+        let upstream = format!(
             r#"{{
         "success": true,
         "release_info": {{
@@ -455,7 +458,11 @@ mod tests {
         "repo_renames": [],
         "important_notices": {{ "announcements": [], "alerts": [] }}
       }}"#
-        )
+        );
+        // Upstream's sample names the storytold repos; in Atelier each app lives in its own repo.
+        SUITE.iter().fold(upstream, |s, a| {
+            s.replace(&format!("storytold/{}/", a.id), &format!("{}/", a.repo)).replace(&format!("storytold/{}\"", a.id), &format!("{}\"", a.repo))
+        })
     }
 
     fn app(id: &str) -> &'static CraftApp {
@@ -504,19 +511,20 @@ mod tests {
 
     #[test]
     fn follows_repo_renames_but_never_trusts_a_repo_it_was_not_told_about() {
+        let ours = app("photocraft").repo;
         let moved = sample()
             .replace(
                 "\"repo_renames\": []",
-                r#""repo_renames": [{"old_name": "storytold/photocraft", "new_name": "art/photocraft", "renamed_at": null}]"#,
+                &format!(r#""repo_renames": [{{"old_name": "{ours}", "new_name": "art/photocraft", "renamed_at": null}}]"#),
             )
-            .replace("\"name\": \"PhotoCraft\", \"repo\": \"storytold/photocraft\"", "\"name\": \"PhotoCraft\", \"repo\": \"art/photocraft\"")
-            .replace("github.com/storytold/photocraft/releases", "github.com/art/photocraft/releases");
+            .replace(&format!("\"name\": \"PhotoCraft\", \"repo\": \"{ours}\""), "\"name\": \"PhotoCraft\", \"repo\": \"art/photocraft\"")
+            .replace(&format!("github.com/{ours}/releases"), "github.com/art/photocraft/releases");
         let feed = Feed::parse(&moved).unwrap();
         assert_eq!(feed.repo_for(app("photocraft")), "art/photocraft");
         let FeedAnswer::Fresh(Some(r)) = feed.answer(app("photocraft"), NOW) else { panic!() };
         assert!(r.assets[0].url.starts_with("https://github.com/art/photocraft/releases/download/"));
         // The same entry without the rename: the repo doesn't match, so GitHub decides.
-        let unannounced = moved.replace(r#"{"old_name": "storytold/photocraft", "new_name": "art/photocraft", "renamed_at": null}"#, "");
+        let unannounced = moved.replace(&format!(r#"{{"old_name": "{ours}", "new_name": "art/photocraft", "renamed_at": null}}"#), "");
         let feed = Feed::parse(&unannounced).unwrap();
         assert_eq!(feed.answer(app("photocraft"), NOW), FeedAnswer::AskGitHub);
     }

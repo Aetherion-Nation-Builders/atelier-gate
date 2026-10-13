@@ -13,4 +13,5 @@ no longer carries LinkedIn's logo). Changes: `fill="#ffffff"` for tinting, and t
 from `0 0 448 512` to a centred square `-32 0 512 512`; the artwork is untouched.
 
 The logos themselves are trademarks of their owners (X Corp., Google LLC, TikTok / ByteDance Ltd.,
-Meta Platforms, Inc. and LinkedIn Corporation). They are used only to link to ArtCraft's own accounts on those services.
+Meta Platforms, Inc. and LinkedIn Corporation). They are used only to link to the Nation's own accounts on those services, once
+`catalog::SOCIAL` lists them (it lists none yet, so Gate shows none of these icons).

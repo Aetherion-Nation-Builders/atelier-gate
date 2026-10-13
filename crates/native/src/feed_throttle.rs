@@ -167,7 +167,7 @@ impl FeedThrottle {
         let Some(file) = &self.file else { return };
         let saved = serde_json::to_vec(&self.saved).unwrap_or_default();
         if let Err(e) = crate::paths::write_atomic(file, &saved) {
-            log::warn!("couldn't save the ArtCraft API backoff: {e}");
+            log::warn!("couldn't save the release feed backoff: {e}");
         }
     }
 }

@@ -1,4 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-10 -19.42 136.34 136.34" role="img" aria-label="ArtCraft">
-  <title>ArtCraft</title>
-  <path fill="#4e7bfb" d="M104.28,49.49L81.55,0h-31.23l-3.17,4.76L14.75,53.63,0,75.85l21.55,21.55,63.79-36.94,16.99,37.04,14.01-21.74-12.06-26.27ZM32.89,65.66l32.42-48.87,10.91,23.77-43.32,25.09Z"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Atelier Gate: the hidden sun behind a gate, glowing through its arched doorway. Three colours:
+       volcanic black #141210, ivory #efe6d2, ochre #d9a441. -->
+  <rect width="512" height="512" rx="112" fill="#141210"/>
+  <circle cx="256" cy="214" r="146" fill="#efe6d2"/>
+  <path d="M140 448 V256 H372 V448 H302 V346 A46 46 0 0 0 210 346 V448 Z" fill="#d9a441" stroke="#141210" stroke-width="24" stroke-linejoin="round" paint-order="stroke"/>
+  <path d="M140 448 V256 H372 V448 H302 V346 A46 46 0 0 0 210 346 V448 Z" fill="#d9a441"/>
+  <path d="M140 288 H372" stroke="#141210" stroke-width="10"/>
 </svg>

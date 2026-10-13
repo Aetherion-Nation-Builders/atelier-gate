@@ -27,13 +27,12 @@ pub struct Tray {
 }
 
 fn load_icon() -> Result<tray_icon::Icon, String> {
-    // The ArtCraft "A" mark (an ArtCraft trademark, not MIT/Apache: docs/brand/LICENSE-brand.txt).
-    // macOS tints the black mark to the menu bar's colours as a template image; elsewhere the
-    // blue mark is shown as supplied.
+    // The Atelier Gate mark (assets/app-icon/). macOS tints the black template to the menu bar's
+    // colours; elsewhere the full-colour mark is shown.
     let bytes: &[u8] = if cfg!(target_os = "macos") {
-        include_bytes!("../../../docs/brand/artcraft-mark-black-44.png")
+        include_bytes!("../../../assets/app-icon/tray-template-44.png")
     } else {
-        include_bytes!("../../../docs/brand/artcraft-mark-64.png")
+        include_bytes!("../../../assets/app-icon/tray-64.png")
     };
     let img = image::load_from_memory_with_format(bytes, image::ImageFormat::Png).map_err(|e| e.to_string())?.into_rgba8();
     let (w, h) = img.dimensions();
@@ -43,23 +42,23 @@ fn load_icon() -> Result<tray_icon::Icon, String> {
 impl Tray {
     /// Creates the tray icon. `wake` repaints the UI so it sees the action, even when hidden.
     pub fn new(wake: impl Fn() + Send + Sync + Clone + 'static) -> Result<Self, String> {
-        let show = MenuItem::new(i18n::t("Show ArtCraft Launcher"), true, None);
+        let show = MenuItem::new(i18n::t("Show Atelier Gate"), true, None);
         let check = MenuItem::new(i18n::t("Check for Updates"), true, None);
-        use artcraft_launcher_core::catalog::{DISCORD_URL, GITHUB_URL, WEBSITE_URL};
-        let website = MenuItem::new(i18n::t("Visit getartcraft.com"), true, None);
-        let github = MenuItem::new(i18n::t("ArtCraft on GitHub"), true, None);
-        let discord = MenuItem::new(i18n::t("Join the ArtCraft Discord"), true, None);
-        let quit = MenuItem::new(i18n::t("Quit ArtCraft Launcher"), true, None);
+        use artcraft_launcher_core::catalog::{GITHUB_URL, NATION_URL, WEBSITE_URL};
+        let website = MenuItem::new(i18n::t("Visit aetherionnnation.com"), true, None);
+        let github = MenuItem::new(i18n::t("Atelier on GitHub"), true, None);
+        let nation = MenuItem::new(i18n::t("Join the Nation"), true, None);
+        let quit = MenuItem::new(i18n::t("Quit Atelier Gate"), true, None);
         let menu = Menu::new();
-        menu.append_items(&[&show, &check, &PredefinedMenuItem::separator(), &website, &github, &discord, &PredefinedMenuItem::separator(), &quit])
+        menu.append_items(&[&show, &check, &PredefinedMenuItem::separator(), &website, &github, &nation, &PredefinedMenuItem::separator(), &quit])
             .map_err(|e| e.to_string())?;
-        let links = [(website.id().clone(), WEBSITE_URL), (github.id().clone(), GITHUB_URL), (discord.id().clone(), DISCORD_URL)];
+        let links = [(website.id().clone(), WEBSITE_URL), (github.id().clone(), GITHUB_URL), (nation.id().clone(), NATION_URL)];
         let icon = TrayIconBuilder::new()
             .with_menu(Box::new(menu))
             .with_icon(load_icon()?)
             .with_icon_as_template(cfg!(target_os = "macos"))
             .with_menu_on_left_click(cfg!(target_os = "macos"))
-            .with_tooltip("ArtCraft Launcher")
+            .with_tooltip("Atelier Gate")
             .build()
             .map_err(|e| e.to_string())?;
         let (tx, rx): (Sender<TrayAction>, Receiver<TrayAction>) = channel();
@@ -91,12 +90,12 @@ impl Tray {
             }
         }));
         let labels = vec![
-            (show, "Show ArtCraft Launcher"),
+            (show, "Show Atelier Gate"),
             (check, "Check for Updates"),
-            (website, "Visit getartcraft.com"),
-            (github, "ArtCraft on GitHub"),
-            (discord, "Join the ArtCraft Discord"),
-            (quit, "Quit ArtCraft Launcher"),
+            (website, "Visit aetherionnnation.com"),
+            (github, "Atelier on GitHub"),
+            (nation, "Join the Nation"),
+            (quit, "Quit Atelier Gate"),
         ];
         Ok(Self { icon, show: show_id, check: check_id, quit: quit_id, rx, tooltip: String::new(), language: String::new(), labels })
     }
@@ -114,9 +113,9 @@ impl Tray {
             self.language = lang.code().to_string();
         }
         let tip = if count == 0 {
-            "ArtCraft Launcher".to_string()
+            "Atelier Gate".to_string()
         } else {
-            i18n::trn(lang, count as u64, "ArtCraft Launcher · {n} update available", "ArtCraft Launcher · {n} updates available")
+            i18n::trn(lang, count as u64, "Atelier Gate · {n} update available", "Atelier Gate · {n} updates available")
         };
         if tip != self.tooltip {
             let _ = self.icon.set_tooltip(Some(&tip));

@@ -204,7 +204,7 @@ fn grid_shows_every_status_and_installs_on_click() {
     h.get_by_label("Like Adobe Photoshop®");
     // The window has no title bar of its own here (the web build, and the tests).
     assert!(h.query_by_label("Close").is_none());
-    assert!(h.query_all_by_label_contains("Discord").count() >= 2); // header link and footer link
+    assert!(h.query_all_by_label("Nation").count() >= 2); // header link and footer link
     h.get_by_label_contains("Adobe, Photoshop, Illustrator");
     assert!(h.query_all_by_label("Coming soon").count() >= 1);
     h.get_by_label_contains("48 MB of 131 MB");
@@ -300,8 +300,8 @@ fn a_kept_update_names_its_version_and_an_up_to_date_app_is_not_downloaded_again
     h.get_by_label("Retry update to 0.6.0").click();
     h.run_steps(2);
     assert_eq!(*sent.borrow(), [Command::Install { app: "effectcraft".into() }]);
-    // WordCraft is up to date: its menu offers Reinstall, which uses the kept file.
-    let row = h.get_all_by_label("WordCraft").next().unwrap().rect().center().y;
+    // Scribe (WordCraft) is up to date: its menu offers Reinstall, which uses the kept file.
+    let row = h.get_all_by_label("Scribe").next().unwrap().rect().center().y;
     h.get_all_by_label("…").find(|n| (n.rect().center().y - row).abs() < 25.0).unwrap().click();
     h.run_steps(3);
     h.get_by_label("Reinstall");
@@ -388,8 +388,8 @@ fn switching_views_and_filters() {
     h.get_by_label_contains("Updates").click();
     h.run_steps(4);
     snapshot(&mut h, "table-updates-dark");
-    assert!(h.query_by_label("WordCraft").is_none());
-    h.get_by_label("PhotoCraft");
+    assert!(h.query_by_label("Scribe").is_none());
+    h.get_by_label("Pigment");
 }
 
 /// How far the middle of these lines of text is below the middle of the app icon beside them, in points.
@@ -411,12 +411,12 @@ fn name_and_tagline_are_centred_on_the_icon() {
         let (mut h, _) = harness_at(ViewMode::Grid, egui::Theme::Dark, true, scale);
         h.run_steps(8);
         snapshot(&mut h, &format!("grid-dark{suffix}"));
-        let off = below_icon_centre(&h, &["PhotoCraft", "Image editing", "Like Adobe Photoshop®"]);
+        let off = below_icon_centre(&h, &["Pigment", "Image editing", "Like Adobe Photoshop®"]);
         assert!(off.abs() < 0.25, "grid at {scale}x: {off}");
         let (mut h, _) = harness_at(ViewMode::Table, egui::Theme::Light, true, scale);
         h.run_steps(8);
         snapshot(&mut h, &format!("table-light{suffix}"));
-        let off = below_icon_centre(&h, &["PhotoCraft", "Image editing"]);
+        let off = below_icon_centre(&h, &["Pigment", "Image editing"]);
         assert!(off.abs() < 0.25, "table at {scale}x: {off}");
     }
 }
@@ -447,22 +447,22 @@ fn every_table_column_sorts_both_ways() {
     h.get_by_label("Installed").click();
     h.run_steps(3);
     let o = order(&h);
-    assert_eq!(&o[..4], ["EffectCraft", "PhotoCraft", "LightCraft", "WordCraft"], "{o:?}");
+    assert_eq!(&o[..4], ["Prism", "Pigment", "Lens", "Scribe"], "{o:?}");
     // Reversed: lowest first, the empty cells still last.
     h.get_by_label("Installed").click();
     h.run_steps(3);
     let o = order(&h);
-    assert_eq!(&o[..4], ["WordCraft", "LightCraft", "PhotoCraft", "EffectCraft"], "{o:?}");
+    assert_eq!(&o[..4], ["Scribe", "Lens", "Pigment", "Prism"], "{o:?}");
     // Inspired by: A to Z.
     h.get_by_label("Inspired by").click();
     h.run_steps(3);
     let o = order(&h);
-    assert_eq!(o.first().map(String::as_str), Some("PdfCraft"), "{o:?}"); // Adobe Acrobat
-    // Latest: highest version first, SoundCraft (no release) last.
+    assert_eq!(o.first().map(String::as_str), Some("Seal"), "{o:?}"); // Adobe Acrobat
+    // Latest: highest version first, Frequency (no release) last.
     h.get_by_label("Latest").click();
     h.run_steps(3);
     let o = order(&h);
-    assert_eq!(o.first().map(String::as_str), Some("VectorCraft"), "{o:?}"); // 0.7.0
+    assert_eq!(o.first().map(String::as_str), Some("Quill"), "{o:?}"); // 0.7.0
     snapshot(&mut h, "table-sorted-latest");
     // App: Z to A on the second click.
     h.get_by_label("App").click();
@@ -470,41 +470,43 @@ fn every_table_column_sorts_both_ways() {
     h.get_by_label("App").click();
     h.run_steps(3);
     let o = order(&h);
-    assert_eq!(o.first().map(String::as_str), Some("WordCraft"), "{o:?}");
+    assert_eq!(o.first().map(String::as_str), Some("Seal"), "{o:?}");
 }
 
 #[test]
-fn settings_link_to_discord() {
+fn settings_link_to_the_nation() {
     let (mut h, _) = harness(ViewMode::Grid, egui::Theme::Dark, true);
     h.run_steps(6);
     h.get_by_label("Settings").click();
     h.run_steps(4);
     snapshot(&mut h, "settings-dark");
-    h.get_by_label("Questions, ideas and news from the ArtCraft team");
-    // The header button and the one in Settings.
-    assert!(h.query_all_by_label_contains("Discord").count() >= 2);
+    h.get_by_label("Atelier is part of Aetherion Nation");
+    // The header link and the button in Settings.
+    assert!(h.query_all_by_label("Nation").count() >= 1);
+    h.get_by_label("Join the Nation");
 }
 
 #[test]
 fn links_to_the_website_github_and_each_apps_pages() {
     let (mut h, _) = harness(ViewMode::Grid, egui::Theme::Dark, true);
     h.run_steps(6);
-    // Footer: website, GitHub and Discord.
-    for label in ["Website", "GitHub", "Discord"] {
+    // Footer: website, GitHub and the Nation.
+    for label in ["Website", "GitHub", "Nation"] {
         assert!(h.query_all_by_label(label).count() >= 1, "{label}");
     }
-    // Cards: every app links to its repo; only the seven classic apps have a website (plus the footer's).
+    // Cards: every app links to its repo and to its page on the Nation's site (plus the footer's).
     let shown_cards = h.query_all_by_label("GitHub").count() - 1;
     let shown_sites = h.query_all_by_label("Website").count() - 1;
     assert!(shown_cards >= 7, "{shown_cards}");
-    assert_eq!(shown_sites, 7, "only classic apps have website pages");
-    // The table's … menu has the app's GitHub repo and, for a new app, no website yet.
+    assert_eq!(shown_sites, shown_cards, "every Atelier app has a page");
+    // The table's … menu has the app's GitHub repo and, for one of the newer apps too, its page.
     let (mut h, _) = harness(ViewMode::Table, egui::Theme::Dark, true);
     h.run_steps(6);
-    h.get_all_by_label("…").nth(7).unwrap().click(); // WordCraft
+    h.get_all_by_label("…").nth(7).unwrap().click(); // Scribe
     h.run_steps(3);
     h.get_by_label("GitHub repository");
-    h.get_by_label("Website (coming soon)");
+    assert!(h.query_by_label("Website (coming soon)").is_none());
+    assert!(h.query_all_by_label("Website").count() >= 2, "the menu's and the footer's");
 }
 
 /// Clicks the `n`th widget labelled `label` and returns the URL the app asked to open.
@@ -537,24 +539,23 @@ fn all_opened(h: &mut Harness<'_, Option<LauncherUi>>, label: &str) -> Vec<Strin
 fn links_open_the_right_pages() {
     let (mut h, _) = harness(ViewMode::Grid, egui::Theme::Dark, true);
     h.run_steps(6);
-    assert_eq!(click_opens(&mut h, "Discord").as_deref(), Some("https://discord.gg/artcraft"));
-    // The footer's ArtCraft links and each card's own pages.
+    assert_eq!(click_opens(&mut h, "Nation").as_deref(), Some("https://www.aetherionnnation.com"));
+    // The footer's Atelier links and each card's own pages.
     let github = all_opened(&mut h, "GitHub");
-    assert!(github.contains(&"https://github.com/storytold".to_string()), "{github:?}");
-    assert!(github.contains(&"https://github.com/storytold/photocraft".to_string()), "{github:?}");
+    assert!(github.contains(&"https://github.com/Aetherion-Nation-Builders".to_string()), "{github:?}");
+    assert!(github.contains(&"https://github.com/Aetherion-Nation-Builders/atelier-pigment".to_string()), "{github:?}");
     let sites = all_opened(&mut h, "Website");
-    assert!(sites.contains(&"https://getartcraft.com".to_string()), "{sites:?}");
-    assert!(sites.contains(&"https://getartcraft.com/apps/photocraft".to_string()), "{sites:?}");
-    // Social icons in the footer.
-    assert_eq!(click_opens(&mut h, "X").as_deref(), Some("https://x.com/get_artcraft"));
-    assert_eq!(click_opens(&mut h, "YouTube").as_deref(), Some("https://www.youtube.com/@OfficialArtcraftStudios"));
-    assert_eq!(click_opens(&mut h, "TikTok").as_deref(), Some("https://www.tiktok.com/@artcraft.studios"));
-    assert_eq!(click_opens(&mut h, "Instagram").as_deref(), Some("https://www.instagram.com/officialartcraftstudios"));
-    assert_eq!(click_opens(&mut h, "LinkedIn").as_deref(), Some("https://www.linkedin.com/company/artcraft-ai"));
+    assert!(sites.contains(&"https://www.aetherionnnation.com".to_string()), "{sites:?}");
+    assert!(sites.contains(&"https://www.aetherionnnation.com/atelier/pigment".to_string()), "{sites:?}");
+    assert!(sites.iter().chain(&github).all(|u| !u.contains("artcraft") && !u.contains("storytold")), "{sites:?} {github:?}");
+    // No social icons until the Nation's accounts are listed (catalog::SOCIAL).
+    for service in ["X", "YouTube", "TikTok", "Instagram", "LinkedIn"] {
+        assert!(h.query_by_label(service).is_none(), "{service}");
+    }
     // The … menu.
     h.get_all_by_label("…").next().unwrap().click();
     h.run_steps(3);
-    assert_eq!(click_opens(&mut h, "All releases").as_deref(), Some("https://github.com/storytold/photocraft/releases"));
+    assert_eq!(click_opens(&mut h, "All releases").as_deref(), Some("https://github.com/Aetherion-Nation-Builders/atelier-pigment/releases"));
 }
 
 #[test]
@@ -641,7 +642,7 @@ fn the_launcher_updates_itself_and_quits_to_restart() {
         None,
     );
     h.run_steps(6);
-    h.get_by_label_contains("ArtCraft Launcher 0.2.0 is available");
+    h.get_by_label_contains("Atelier Gate 0.2.0 is available");
     h.get_by_label("Update and restart").click();
     h.run_steps(2);
     assert!(sent.borrow().contains(&Command::UpdateLauncher));
@@ -753,10 +754,10 @@ fn the_footer_names_the_services_behind_what_is_on_screen() {
             h.get_by_label_contains("Checked ").accesskit_node().label().or_else(|| h.get_by_label_contains("Checked ").accesskit_node().value());
         label.unwrap_or_default()
     };
-    assert_eq!(footer(Vec::new()), "Checked 3 min ago · using ArtCraft API");
+    assert_eq!(footer(Vec::new()), "Checked 3 min ago · using Release feed");
     let from_github =
         vec![Event::Latest { app: "wordcraft".into(), latest: LatestRelease::Found(release("wordcraft", "0.3.1", NOW)), from: Origin::GitHub }];
-    assert_eq!(footer(from_github), "Checked 3 min ago · using ArtCraft API and GitHub");
+    assert_eq!(footer(from_github), "Checked 3 min ago · using Release feed and GitHub");
 }
 
 #[test]

@@ -110,7 +110,7 @@ fn detect(exe: &Path) -> Option<Install> {
     // registry) or by default %LOCALAPPDATA%\Programs\ArtCraft Launcher.
     let canonical = |p: PathBuf| p.canonicalize().unwrap_or(p);
     let recorded = msi_install_dir().map(canonical);
-    let default = dirs::data_local_dir().map(|d| canonical(d.join("Programs").join(LAUNCHER.name)));
+    let default = dirs::data_local_dir().map(|d| canonical(d.join("Programs").join(LAUNCHER.product)));
     [recorded, default].into_iter().flatten().any(|d| d == dir).then(|| Install::Msi(exe.to_path_buf()))
 }
 
@@ -166,7 +166,7 @@ pub fn update(
     last: &dyn Fn() -> Result<(), String>,
 ) -> Result<(), String> {
     let (asset, _) = pick_asset(release, &[LAUNCHER.id], platform, &[install.kind()])
-        .ok_or_else(|| format!("ArtCraft Launcher {} has no {} for {}", release.version_label(), install.kind().label(), platform.label()))?;
+        .ok_or_else(|| format!("Atelier Gate {} has no {} for {}", release.version_label(), install.kind().label(), platform.label()))?;
     let asset = asset.clone();
     let mut job = Job { http, paths, stop, phase };
     let (file, _) = install::download(release, &asset, &mut job)?;
@@ -229,7 +229,7 @@ pub fn update(
         #[allow(unreachable_patterns)]
         _ => {
             let _ = (pid, &file);
-            Err("this copy of ArtCraft Launcher can't update itself; download the new version instead".into())
+            Err("this copy of Atelier Gate can't update itself; download the new version instead".into())
         }
     }
 }

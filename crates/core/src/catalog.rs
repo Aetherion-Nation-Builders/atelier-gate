@@ -1,4 +1,4 @@
-//! The Craft App Suite: the twelve apps the launcher knows about.
+//! Atelier: the twelve apps Atelier Gate knows about (each built on a Craft App; see docs/brand.md).
 //!
 //! The list is data so a later version can fetch it from an API; [`SUITE`] is the built-in copy.
 //!
@@ -10,7 +10,7 @@ use serde::{Deserialize, Serialize};
 /// Which generation of the suite an app belongs to.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum AppGroup {
-    /// The seven original apps, each with a page on getartcraft.com.
+    /// The seven apps the suite started with.
     Classic,
     /// The five apps added after them.
     New,
@@ -30,8 +30,14 @@ impl AppGroup {
 pub struct CraftApp {
     /// Machine name: repo, binary, package and asset stem (`photocraft`).
     pub id: &'static str,
-    /// Display name (`PhotoCraft`).
+    /// Display name (`Pigment`).
     pub name: &'static str,
+    /// The full product name (`Atelier Pigment`): what the app's Windows installer registers (the
+    /// Apps & features entry and the `Program Files` folder).
+    pub product: &'static str,
+    /// The name its macOS bundle and `Info.plist` version key still carry (`PhotoCraft.app`,
+    /// `PhotoCraftVersion`): upstream's, until the packaging pass renames the bundles.
+    pub bundle: &'static str,
     /// What it's for, in a few words (English; the UI translates it by app id).
     pub tagline: &'static str,
     /// The familiar app it reimplements, for orientation.
@@ -68,9 +74,9 @@ impl CraftApp {
         format!("https://github.com/{}", self.repo)
     }
 
-    /// The app's page on getartcraft.com (classic apps only).
+    /// The app's page on the Nation's site.
     pub fn website(&self) -> Option<String> {
-        (self.group == AppGroup::Classic).then(|| format!("https://getartcraft.com/apps/{}", self.id))
+        Some(format!("{WEBSITE_URL}/atelier/{}", self.name.to_lowercase()))
     }
 
     /// Asset stems this app's releases may use, current first.
@@ -85,128 +91,128 @@ impl CraftApp {
 
 const fn app(
     id: &'static str,
-    name: &'static str,
+    [name, product, bundle]: [&'static str; 3],
     tagline: &'static str,
     like: &'static str,
     group: AppGroup,
     [color, ink_light, ink_dark]: [[u8; 3]; 3],
     repo: &'static str,
 ) -> CraftApp {
-    CraftApp { id, name, tagline, like, group, color, ink_light, ink_dark, repo, former_ids: &[] }
+    CraftApp { id, name, product, bundle, tagline, like, group, color, ink_light, ink_dark, repo, former_ids: &[] }
 }
 
-/// The Craft App Suite, in display order: the seven classic apps, then the five new ones.
+/// Atelier, in display order: the seven classic apps, then the five new ones.
 pub const SUITE: [CraftApp; 12] = [
     app(
         "photocraft",
-        "PhotoCraft",
+        ["Pigment", "Atelier Pigment", "PhotoCraft"],
         "Image editing",
         "Adobe Photoshop",
         AppGroup::Classic,
         [[0x2f, 0x7b, 0xf5], [0x1a, 0x5b, 0xc4], [0x7f, 0xb0, 0xff]],
-        "storytold/photocraft",
+        "Aetherion-Nation-Builders/atelier-pigment",
     ),
     app(
         "vectorcraft",
-        "VectorCraft",
+        ["Quill", "Atelier Quill", "VectorCraft"],
         "Vector illustration",
         "Adobe Illustrator",
         AppGroup::Classic,
         [[0xe8, 0x57, 0x3f], [0xb8, 0x3a, 0x24], [0xff, 0x8a, 0x70]],
-        "storytold/vectorcraft",
+        "Aetherion-Nation-Builders/atelier-quill",
     ),
     app(
         "filmcraft",
-        "FilmCraft",
+        ["Reel", "Atelier Reel", "FilmCraft"],
         "Video editing, color and sound",
         "Adobe Premiere Pro",
         AppGroup::Classic,
         [[0x8b, 0x5c, 0xf6], [0x6a, 0x3f, 0xd6], [0xb6, 0x9c, 0xff]],
-        "storytold/filmcraft",
+        "Aetherion-Nation-Builders/atelier-reel",
     ),
     app(
         "lightcraft",
-        "LightCraft",
+        ["Lens", "Atelier Lens", "LightCraft"],
         "Photo library and raw development",
         "Adobe Lightroom",
         AppGroup::Classic,
         [[0xf2, 0xa5, 0x16], [0x8a, 0x58, 0x00], [0xff, 0xc1, 0x4d]],
-        "storytold/lightcraft",
+        "Aetherion-Nation-Builders/atelier-lens",
     ),
     CraftApp {
         former_ids: &["printcraft"],
         ..app(
             "pdfcraft",
-            "PdfCraft",
+            ["Seal", "Atelier Seal", "PdfCraft"],
             "Reading, organizing and protecting PDFs",
             "Adobe Acrobat",
             AppGroup::Classic,
             [[0x12, 0xa5, 0x8a], [0x0a, 0x75, 0x63], [0x3f, 0xd6, 0xb8]],
-            "storytold/pdfcraft",
+            "Aetherion-Nation-Builders/atelier-seal",
         )
     },
     app(
         "effectcraft",
-        "EffectCraft",
+        ["Prism", "Atelier Prism", "EffectCraft"],
         "Motion graphics and visual effects",
         "Adobe After Effects",
         AppGroup::Classic,
         [[0xe0, 0x36, 0x8f], [0xb0, 0x20, 0x6c], [0xff, 0x7a, 0xb8]],
-        "storytold/effectcraft",
+        "Aetherion-Nation-Builders/atelier-prism",
     ),
     app(
         "designcraft",
-        "DesignCraft",
+        ["Press", "Atelier Press", "DesignCraft"],
         "Page layout and publishing",
         "Adobe InDesign",
         AppGroup::Classic,
         [[0x7b, 0xb5, 0x1c], [0x45, 0x70, 0x08], [0xa6, 0xe0, 0x4a]],
-        "storytold/designcraft",
+        "Aetherion-Nation-Builders/atelier-press",
     ),
     app(
         "wordcraft",
-        "WordCraft",
+        ["Scribe", "Atelier Scribe", "WordCraft"],
         "Writing and document design",
         "Microsoft Word",
         AppGroup::New,
         [[0x3f, 0x5f, 0xe0], [0x2a, 0x44, 0xb8], [0x8e, 0xa2, 0xff]],
-        "storytold/wordcraft",
+        "Aetherion-Nation-Builders/atelier-scribe",
     ),
     app(
         "deckcraft",
-        "DeckCraft",
+        ["Podium", "Atelier Podium", "DeckCraft"],
         "Presentations and slide shows",
         "Microsoft PowerPoint",
         AppGroup::New,
         [[0xf0, 0x7a, 0x1e], [0xa8, 0x4f, 0x0a], [0xff, 0xa0, 0x60]],
-        "storytold/deckcraft",
+        "Aetherion-Nation-Builders/atelier-podium",
     ),
     app(
         "gridcraft",
-        "GridCraft",
+        ["Ledger", "Atelier Ledger", "GridCraft"],
         "Spreadsheets and data",
         "Microsoft Excel",
         AppGroup::New,
         [[0x1f, 0x9d, 0x55], [0x12, 0x70, 0x3a], [0x4f, 0xd6, 0x8a]],
-        "storytold/gridcraft",
+        "Aetherion-Nation-Builders/atelier-ledger",
     ),
     app(
         "cadcraft",
-        "CADCraft",
+        ["Blueprint", "Atelier Blueprint", "CADCraft"],
         "Computer-aided design and drafting",
         "Autodesk AutoCAD",
         AppGroup::New,
         [[0x3e, 0xa6, 0xe8], [0x1a, 0x6f, 0xa8], [0x7c, 0xc8, 0xff]],
-        "storytold/cadcraft",
+        "Aetherion-Nation-Builders/atelier-blueprint",
     ),
     app(
         "soundcraft",
-        "SoundCraft",
+        ["Frequency", "Atelier Frequency", "SoundCraft"],
         "Recording, editing and mixing audio",
         "Avid Pro Tools",
         AppGroup::New,
         [[0x1f, 0xa5, 0xc9], [0x0e, 0x72, 0x90], [0x5f, 0xd0, 0xee]],
-        "storytold/soundcraft",
+        "Aetherion-Nation-Builders/atelier-frequency",
     ),
 ];
 
@@ -215,40 +221,35 @@ pub const TRADEMARK_NOTICE: &str = "Adobe, Photoshop, Illustrator, Premiere Pro,
 registered trademarks or trademarks of Adobe in the United States and/or other countries. Microsoft, Word, PowerPoint and Excel are \
 trademarks of the Microsoft group of companies. Autodesk and AutoCAD are registered trademarks or trademarks of Autodesk, Inc. Avid \
 and Pro Tools are trademarks or registered trademarks of Avid Technology, Inc. All other trademarks are the property of their \
-respective owners. These names are used only to describe what each Craft App is for; the Craft App Suite is independent and is not \
+respective owners. These names are used only to describe what each Atelier app is for; Atelier is independent and is not \
 affiliated with, sponsored by or endorsed by any of these companies.";
 
-/// ArtCraft's website.
-pub const WEBSITE_URL: &str = "https://getartcraft.com";
-/// ArtCraft on GitHub: every Craft App's source.
-pub const GITHUB_URL: &str = "https://github.com/storytold";
-/// ArtCraft's social accounts: (service, URL). Shown as small icons, less prominent than Discord.
-pub const SOCIAL: [(&str, &str); 5] = [
-    ("X", "https://x.com/get_artcraft"),
-    ("Instagram", "https://www.instagram.com/officialartcraftstudios"),
-    ("LinkedIn", "https://www.linkedin.com/company/artcraft-ai"),
-    ("YouTube", "https://www.youtube.com/@OfficialArtcraftStudios"),
-    ("TikTok", "https://www.tiktok.com/@artcraft.studios"),
-];
+/// The Nation's website.
+pub const WEBSITE_URL: &str = "https://www.aetherionnnation.com";
+/// Atelier on GitHub: every Atelier app's source.
+pub const GITHUB_URL: &str = "https://github.com/Aetherion-Nation-Builders";
+/// The Nation's social accounts: (service, URL), shown as small icons. None yet; a service needs
+/// an icon in `ui-egui`'s `icons::social` (X, Instagram, LinkedIn, YouTube, TikTok are there).
+pub const SOCIAL: [(&str, &str); 0] = [];
 
-/// The ArtCraft community on Discord.
-pub const DISCORD_URL: &str = "https://discord.gg/artcraft";
+/// Joining the Nation (the community link that was ArtCraft's Discord upstream).
+pub const NATION_URL: &str = "https://www.aetherionnnation.com";
 
-/// ArtCraft Launcher itself, described like a Craft App so it can update itself with the same
-/// machinery (asset names `artcraft-launcher-<ver>-…`, bundle id `ai.storyteller.artcraft-launcher`,
-/// `ArtCraft Launcher.app`). Not part of [`SUITE`].
+/// Atelier Gate itself, described like an app so it can update itself with the same machinery
+/// (asset names `artcraft-launcher-<ver>-…`, bundle id `ai.storyteller.artcraft-launcher`,
+/// `ArtCraft Launcher.app`: machine names kept from upstream). Not part of [`SUITE`].
 pub const LAUNCHER: CraftApp = app(
     "artcraft-launcher",
-    "ArtCraft Launcher",
-    "Installs and updates the Craft App Suite",
+    ["Atelier Gate", "Atelier Gate", "ArtCraft Launcher"],
+    "Installs and updates the Atelier apps",
     "",
     AppGroup::New,
     [[0x0b, 0x0b, 0x0c], [0x0b, 0x0b, 0x0c], [0xf2, 0xf1, 0xee]],
-    "storytold/craft-launcher",
+    "Aetherion-Nation-Builders/atelier-gate",
 );
 
 /// The launcher's own repo, checked so it can say when a newer launcher is out.
-pub const LAUNCHER_REPO: &str = "storytold/craft-launcher";
+pub const LAUNCHER_REPO: &str = "Aetherion-Nation-Builders/atelier-gate";
 /// The launcher's own asset stem.
 pub const LAUNCHER_ID: &str = "artcraft-launcher";
 
@@ -265,9 +266,12 @@ mod tests {
         ids.dedup();
         assert_eq!(ids.len(), SUITE.len());
         for a in &SUITE {
-            assert_eq!(a.repo, format!("storytold/{}", a.id));
-            assert_eq!(a.name.to_lowercase(), a.id);
+            assert_eq!(a.repo, format!("Aetherion-Nation-Builders/atelier-{}", a.name.to_lowercase()));
+            assert!(a.id.ends_with("craft"), "{}: machine names stay upstream's", a.id);
+            assert_eq!(a.product, format!("Atelier {}", a.name));
+            assert_eq!(a.bundle.to_lowercase(), a.id, "macOS bundles keep upstream's name");
         }
+        assert_eq!(LAUNCHER.repo, LAUNCHER_REPO);
     }
 
     #[test]
@@ -285,7 +289,8 @@ mod tests {
     fn pdfcraft_also_answers_to_printcraft() {
         let pdf = CraftApp::by_id("pdfcraft").unwrap();
         assert_eq!(pdf.stems().collect::<Vec<_>>(), ["pdfcraft", "printcraft"]);
-        assert_eq!(pdf.website().as_deref(), Some("https://getartcraft.com/apps/pdfcraft"));
-        assert_eq!(CraftApp::by_id("wordcraft").unwrap().website(), None);
+        assert_eq!(pdf.name, "Seal");
+        assert_eq!(pdf.website().as_deref(), Some("https://www.aetherionnnation.com/atelier/seal"));
+        assert_eq!(CraftApp::by_id("wordcraft").unwrap().website().as_deref(), Some("https://www.aetherionnnation.com/atelier/scribe"));
     }
 }

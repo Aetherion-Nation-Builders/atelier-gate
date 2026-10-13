@@ -1,8 +1,8 @@
 [Desktop Entry]
 Type=Application
-Name=ArtCraft Launcher
+Name=Atelier Gate
 GenericName=App Launcher
-Comment=Install, update and launch the Craft App Suite
+Comment=Install, update and launch the Atelier apps
 Exec=artcraft-launcher
 TryExec=artcraft-launcher
 Icon=ai.storyteller.artcraft-launcher
@@ -10,4 +10,4 @@ Terminal=false
 StartupNotify=true
 StartupWMClass=artcraft-launcher
 Categories=Utility;PackageManager;
-Keywords=artcraft;craft;launcher;installer;updater;photocraft;filmcraft;apps;
+Keywords=atelier;gate;launcher;installer;updater;pigment;reel;apps;

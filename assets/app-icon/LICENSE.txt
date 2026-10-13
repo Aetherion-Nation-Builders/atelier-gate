@@ -1,8 +1,9 @@
-ArtCraft Launcher app icon (every file in this directory)
+Atelier Gate app icon (every file in this directory)
 
-These files are the ArtCraft "A" mark (docs/brand/artcraft-mark-black.svg), rendered unmodified by
-packaging/icons.sh. The mark is a trademark of the ArtCraft Team. It is NOT open source and is NOT
-covered by ArtCraft Launcher's MIT or Apache-2.0 license.
+These files are the Atelier Gate mark, the hidden sun behind a gate: original work for Atelier by
+the Atelier Gate contributors (Aetherion Nation), 2026. artcraft-launcher.svg is the master; every
+other file is rendered from it by packaging/icons.sh.
 
-Its terms are in docs/brand/LICENSE-brand.txt. In short: it may be used only unmodified, only as
-part of this repository and ArtCraft Launcher, and forks and modified versions must remove it.
+Licensed under the MIT License or the Apache License, Version 2.0, at your option, like the rest of
+Atelier Gate (LICENSE-MIT, LICENSE-APACHE). The Atelier and Aetherion names and marks are not
+covered by that license.

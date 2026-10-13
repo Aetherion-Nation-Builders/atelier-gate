@@ -5,19 +5,19 @@
   <id>ai.storyteller.artcraft-launcher</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>MIT OR Apache-2.0</project_license>
-  <name>ArtCraft Launcher</name>
-  <summary>Install, update and launch the Craft App Suite</summary>
+  <name>Atelier Gate</name>
+  <summary>Install, update and launch the Atelier apps</summary>
   <developer id="ai.storyteller">
-    <name>Learning Machines LLC</name>
+    <name>Aetherion Nation</name>
   </developer>
   <description>
     <p>
-      ArtCraft Launcher lists every app in the Craft App Suite (PhotoCraft, LightCraft, FilmCraft,
-      DesignCraft, VectorCraft, PdfCraft, EffectCraft, WordCraft, DeckCraft, GridCraft, CADCraft
-      and SoundCraft), installs the right build for your computer, and keeps them up to date.
+      Atelier Gate lists every app in Atelier, the Nation's creative suite (Pigment, Quill, Reel,
+      Lens, Seal, Prism, Press, Scribe, Podium, Ledger, Blueprint and Frequency), installs the
+      right build for your computer, and keeps them up to date.
     </p>
     <ul>
-      <li>One place to find, install and open every Craft app</li>
+      <li>One place to find, install and open every Atelier app</li>
       <li>Checks GitHub releases for updates and installs them for you</li>
       <li>Lives in the system tray and tells you when updates are ready</li>
     </ul>
@@ -25,10 +25,10 @@
   <launchable type="desktop-id">ai.storyteller.artcraft-launcher.desktop</launchable>
   <icon type="stock">ai.storyteller.artcraft-launcher</icon>
   <!-- Only url types known to appstream 0.15 (Ubuntu 22.04, where CI validates): no vcs-browser. -->
-  <url type="homepage">https://getartcraft.com/apps</url>
-  <url type="bugtracker">https://github.com/storytold/craft-launcher/issues</url>
-  <url type="help">https://github.com/storytold/craft-launcher</url>
-  <url type="contact">https://discord.gg/artcraft</url>
+  <url type="homepage">https://www.aetherionnnation.com/atelier</url>
+  <url type="bugtracker">https://github.com/Aetherion-Nation-Builders/atelier-gate/issues</url>
+  <url type="help">https://github.com/Aetherion-Nation-Builders/atelier-gate</url>
+  <url type="contact">https://www.aetherionnnation.com</url>
   <categories>
     <category>Utility</category>
     <category>PackageManager</category>
@@ -37,7 +37,7 @@
     <keyword>launcher</keyword>
     <keyword>installer</keyword>
     <keyword>updater</keyword>
-    <keyword>artcraft</keyword>
+    <keyword>atelier</keyword>
   </keywords>
   <branding>
     <color type="primary" scheme_preference="light">#d9dce3</color>

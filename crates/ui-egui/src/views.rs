@@ -77,15 +77,20 @@ impl LauncherUi {
             if bar == TitleBar::MacOs {
                 ui.add_space(TRAFFIC_LIGHTS_W);
             }
-            // The ArtCraft wordmark exactly as supplied, in its own cell.
-            let logo = vec2(14.0 * crate::icons::ARTCRAFT_LOGO_ASPECT, 14.0);
-            let (cell, _) = ui.allocate_exact_size(vec2(logo.x + 40.0, h), Sense::hover());
-            egui::Image::new(crate::icons::artcraft_logo(t.dark)).alt_text(tl!("ArtCraft")).paint_at(ui, Rect::from_center_size(cell.center(), logo));
+            // The Gate mark and the Atelier name, in their own cell.
+            ui.add_space(20.0);
+            let (mark, _) = ui.allocate_exact_size(vec2(22.0, h), Sense::hover());
+            egui::Image::new(crate::icons::gate_mark())
+                .alt_text("Atelier Gate")
+                .paint_at(ui, Rect::from_center_size(mark.center(), vec2(22.0, 22.0)));
+            ui.add_space(10.0);
+            ui.label(RichText::new("Atelier").font(egui::FontId::new(17.0, theme::display())).color(t.ink_strong));
+            ui.add_space(20.0);
             widgets::rule(ui, h);
             ui.add_space(16.0);
-            widgets::tag(ui, tl!("Launcher"), t.invert_bg, t.invert_fg);
+            widgets::tag(ui, tl!("Gate"), t.invert_bg, t.invert_fg);
             ui.add_space(12.0);
-            widgets::hud(ui, tl!("Craft App Suite"), t.muted);
+            widgets::hud(ui, tl!("Aetherion Nation"), t.muted);
             ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                 if bar == TitleBar::Custom {
                     widgets::window_buttons(ui, h);
@@ -97,8 +102,8 @@ impl LauncherUi {
                     self.check_now();
                 }
                 ui.add_space(6.0);
-                if widgets::nav_link(ui, tl!("Discord"), tl!("Join the ArtCraft community on Discord"), h, false).clicked() {
-                    ui.ctx().open_url(egui::OpenUrl::new_tab(artcraft_launcher_core::catalog::DISCORD_URL));
+                if widgets::nav_link(ui, tl!("Nation"), tl!("Join the Nation (aetherionnnation.com)"), h, false).clicked() {
+                    ui.ctx().open_url(egui::OpenUrl::new_tab(artcraft_launcher_core::catalog::NATION_URL));
                 }
                 ui.add_space(6.0);
                 widgets::rule(ui, h);
@@ -129,7 +134,7 @@ impl LauncherUi {
                         widgets::tag(ui, tl!("Update"), t.accent, Color32::WHITE);
                         ui.add_space(4.0);
                         ui.label(
-                            RichText::new(fmt(tl!("ArtCraft Launcher {version} is available."), &[("version", &r.version_label())]))
+                            RichText::new(fmt(tl!("Atelier Gate {version} is available."), &[("version", &r.version_label())]))
                                 .family(theme::medium())
                                 .color(t.ink_strong),
                         );
@@ -186,7 +191,7 @@ impl LauncherUi {
         ui.horizontal(|ui| {
             let updates = self.count(Filter::Updates);
             let filters: Vec<(Filter, Cell<'_>)> = [
-                (Filter::All, tl!("All"), tl!("Every Craft app"), None),
+                (Filter::All, tl!("All"), tl!("Every Atelier app"), None),
                 // The tab names a group ("installed ones"); the status pill says "Installed".
                 (Filter::Installed, tr_ctx(current(), "filter", "Installed"), tl!("Apps on this computer"), None),
                 (Filter::Updates, tl!("Updates"), tl!("Installed apps with a newer version"), Some(t.warn)),
@@ -323,15 +328,15 @@ impl LauncherUi {
                 };
                 widgets::hud(ui, &label, t.faint);
                 ui.add_space(16.0);
-                // Right to left, so this reads: Website · GitHub · Discord, then the social icons.
+                // Right to left, so this reads: Website · GitHub · Nation, then any social icons.
                 ui.scope(|ui| {
                     ui.spacing_mut().item_spacing.x = 0.0;
                     widgets::social_icons(ui, 13.0);
                 });
                 ui.add_space(12.0);
                 ui.spacing_mut().item_spacing.x = 16.0;
-                use artcraft_launcher_core::catalog::{DISCORD_URL, GITHUB_URL, WEBSITE_URL};
-                widgets::hud_link(ui, tl!("Discord"), DISCORD_URL);
+                use artcraft_launcher_core::catalog::{GITHUB_URL, NATION_URL, WEBSITE_URL};
+                widgets::hud_link(ui, tl!("Nation"), NATION_URL);
                 widgets::hud_link(ui, tl!("GitHub"), GITHUB_URL);
                 widgets::hud_link(ui, tl!("Website"), WEBSITE_URL);
             });

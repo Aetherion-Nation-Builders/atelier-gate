@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  Build, sign and package ArtCraft Launcher for Windows.
+  Build, sign and package Atelier Gate for Windows.
 
 .DESCRIPTION
   Produces, in $env:DIST (default: dist/release):
@@ -29,7 +29,7 @@ $Root = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
 
 # ---- app-specific values ----------------------------------------------------------------------
 $Pkg = 'artcraft-launcher'          # cargo package and binary
-$AppName = 'ArtCraft Launcher'      # display name
+$AppName = 'Atelier Gate'      # display name
 
 function Invoke-Native([string] $What, [scriptblock] $Block) {
   Write-Output "==> $What"
@@ -95,30 +95,33 @@ Copy-Item (Join-Path $Bin $Exe) $Stage
 & (Join-Path $PSScriptRoot 'sign.ps1') (Join-Path $Stage $Exe)
 
 # ---- MSI ---------------------------------------------------------------------------------------
-# The setup wizard's art, drawn here (System.Drawing) in getartcraft.com's style so the MSI shows
-# ArtCraft rather than WiX's stock bitmaps. Both must be 24-bit BMPs:
+# The setup wizard's art, drawn here (System.Drawing) so the MSI shows Atelier rather than WiX's
+# stock bitmaps. Both must be 24-bit BMPs:
 #   - dialog, 493x312: the Welcome and Finish pages' backdrop. Their text sits on the right, so
-#     that stays white; the left panel is ours: the blue ArtCraft mark, the white wordmark, a mono
-#     "Launcher" label and the Craft apps' icons in a hairline grid.
+#     that stays white; the left panel is ours: the Gate mark, "Atelier" in Archivo, a mono
+#     "Gate" label and the Atelier apps' icons in a hairline grid.
 #   - banner, 493x58: across the top of the inner pages. The page title is drawn over its left
 #     side, so that stays white; the right end is a dark cell with the mark.
-# The ArtCraft mark and wordmark are drawn as supplied (docs/brand/LICENSE-brand.txt).
+# Colours are Atelier's: volcanic black #141210 and ochre #d9a441.
 function New-InstallerArt([string] $BannerOut, [string] $DialogOut) {
   Add-Type -AssemblyName System.Drawing
-  $ink = [System.Drawing.ColorTranslator]::FromHtml('#121316')
-  $accent = [System.Drawing.ColorTranslator]::FromHtml('#2d81ff')
+  $ink = [System.Drawing.ColorTranslator]::FromHtml('#141210')
+  $accent = [System.Drawing.ColorTranslator]::FromHtml('#d9a441')
   $muted = [System.Drawing.Color]::FromArgb(153, 242, 241, 238)
   $line = [System.Drawing.Color]::FromArgb(38, 242, 241, 238)
-  # The Craft App Suite, in the launcher's order (crates/core/src/catalog.rs).
+  # The Atelier apps (machine ids), in Gate's order (crates/core/src/catalog.rs).
   $apps = 'photocraft', 'vectorcraft', 'filmcraft', 'lightcraft', 'pdfcraft', 'effectcraft',
     'designcraft', 'wordcraft', 'deckcraft', 'gridcraft', 'cadcraft', 'soundcraft'
   $mark = [System.Drawing.Image]::FromFile((Join-Path $Root 'assets\app-icon\hicolor\256x256\apps\ai.storyteller.artcraft-launcher.png'))
-  $wordmark = [System.Drawing.Image]::FromFile((Join-Path $Root 'docs\brand\artcraft-logo-white.png'))
   $icons = $apps | ForEach-Object { [System.Drawing.Image]::FromFile((Join-Path $Root "assets\app-icons\$_.png")) }
   # The site's label face; GDI+ draws a variable font at its default instance (Regular).
   $fonts = New-Object System.Drawing.Text.PrivateFontCollection
   $fonts.AddFontFile((Join-Path $Root 'assets\fonts\GeistMono-Variable.ttf'))
   $labelFont = New-Object System.Drawing.Font $fonts.Families[0], 9, ([System.Drawing.FontStyle]::Regular), ([System.Drawing.GraphicsUnit]::Pixel)
+  # "Atelier" in Archivo, the headings face.
+  $titleFonts = New-Object System.Drawing.Text.PrivateFontCollection
+  $titleFonts.AddFontFile((Join-Path $Root 'assets\fonts\Archivo-Variable.ttf'))
+  $titleFont = New-Object System.Drawing.Font $titleFonts.Families[0], 22, ([System.Drawing.FontStyle]::Regular), ([System.Drawing.GraphicsUnit]::Pixel)
   try {
     foreach ($spec in @(@($BannerOut, 493, 58), @($DialogOut, 493, 312))) {
       $bmp = New-Object System.Drawing.Bitmap $spec[1], $spec[2], ([System.Drawing.Imaging.PixelFormat]::Format24bppRgb)
@@ -139,11 +142,13 @@ function New-InstallerArt([string] $BannerOut, [string] $DialogOut) {
           $g.FillRectangle($panel, 0, 0, 164, 312)
           $g.FillRectangle($stripe, 162, 0, 2, 312)
           $g.DrawImage($mark, 16, 18, 44, 44)
-          $g.DrawImage($wordmark, 22, 74, 120, [int](120 * $wordmark.Height / $wordmark.Width))
-          # "LAUNCHER" in mono capitals, spaced like the site's labels (0.15 em).
+          $white = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::White)
+          $g.DrawString('Atelier', $titleFont, $white, 20, 68, [System.Drawing.StringFormat]::GenericTypographic)
+          $white.Dispose()
+          # "GATE" in mono capitals, spaced like the labels in the app (0.15 em).
           $brush = New-Object System.Drawing.SolidBrush $muted
           $x = 22.0
-          foreach ($ch in 'LAUNCHER'.ToCharArray()) {
+          foreach ($ch in 'GATE'.ToCharArray()) {
             $g.DrawString([string]$ch, $labelFont, $brush, $x, 94, [System.Drawing.StringFormat]::GenericTypographic)
             $x += $g.MeasureString([string]$ch, $labelFont, 100, [System.Drawing.StringFormat]::GenericTypographic).Width + 1.35
           }
@@ -164,7 +169,7 @@ function New-InstallerArt([string] $BannerOut, [string] $DialogOut) {
       $bmp.Dispose()
     }
   } finally {
-    $labelFont.Dispose(); $fonts.Dispose(); $mark.Dispose(); $wordmark.Dispose()
+    $labelFont.Dispose(); $fonts.Dispose(); $titleFont.Dispose(); $titleFonts.Dispose(); $mark.Dispose()
     $icons | ForEach-Object { $_.Dispose() }
   }
 }
