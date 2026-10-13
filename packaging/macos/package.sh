@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Build, sign and (optionally) notarize the macOS release artifact:
 #
-#   $DIST/artcraft-launcher-<version>-macos-<arch>.dmg   ArtCraft Launcher.app on a drag-to-Applications DMG
+#   $DIST/artcraft-launcher-<version>-macos-<arch>.dmg   Atelier Gate.app on a drag-to-Applications DMG
 #
 # Usage: packaging/macos/package.sh [--arch universal|aarch64|x86_64] [--skip-build]
 #
@@ -18,7 +18,10 @@ HERE="$ROOT/packaging/macos"
 
 # ---- app-specific values ----------------------------------------------------------------------
 PKG=artcraft-launcher          # cargo package and binary
-APP_NAME="ArtCraft Launcher"   # display name: bundle, executable, icon, DMG volume
+APP_NAME="Atelier Gate"        # display name: the bundle and the DMG volume
+# Executable and icon file inside the bundle: upstream's machine names (CFBundleExecutable /
+# CFBundleIconFile in Info.plist.in), kept so syncs merge cleanly.
+EXE_NAME="ArtCraft Launcher"
 
 ARCH=universal
 SKIP_BUILD=0
@@ -97,12 +100,12 @@ notarize() {
   fi
 }
 
-# ---- ArtCraft Launcher.app ---------------------------------------------------------------------
+# ---- the app bundle ----------------------------------------------------------------------------
 echo "==> assembling $APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
-# Executable and icon carry the display name (CFBundleExecutable / CFBundleIconFile).
-cp "$WORK/bin/$PKG" "$APP/Contents/MacOS/$APP_NAME"
-cp "$ROOT/assets/app-icon/$PKG.icns" "$APP/Contents/Resources/$APP_NAME.icns"
+# Executable and icon carry EXE_NAME (CFBundleExecutable / CFBundleIconFile).
+cp "$WORK/bin/$PKG" "$APP/Contents/MacOS/$EXE_NAME"
+cp "$ROOT/assets/app-icon/$PKG.icns" "$APP/Contents/Resources/$EXE_NAME.icns"
 sed -e "s/@VERSION@/$VERSION/g" -e "s/@SHORT_VERSION@/$SHORT_VERSION/g" \
   -e "s/@BUILD_SHA@/${ARTCRAFT_LAUNCHER_BUILD_SHA:-unknown}/g" \
   "$HERE/Info.plist.in" >"$APP/Contents/Info.plist"
@@ -115,7 +118,7 @@ printf 'APPL????' >"$APP/Contents/PkgInfo"
 
 # Sign inside-out: nested code first, then the bundle itself (no --deep on the final signature).
 # Today the only nested code is the main executable; frameworks/helpers would be signed here too.
-sign --options runtime --entitlements "$HERE/entitlements.plist" "$APP/Contents/MacOS/$APP_NAME"
+sign --options runtime --entitlements "$HERE/entitlements.plist" "$APP/Contents/MacOS/$EXE_NAME"
 sign --options runtime --entitlements "$HERE/entitlements.plist" "$APP"
 codesign --verify --strict --deep --verbose=2 "$APP"
 

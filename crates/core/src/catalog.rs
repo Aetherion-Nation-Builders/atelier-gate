@@ -35,8 +35,10 @@ pub struct CraftApp {
     /// The full product name (`Atelier Pigment`): what the app's Windows installer registers (the
     /// Apps & features entry and the `Program Files` folder).
     pub product: &'static str,
-    /// The name its macOS bundle and `Info.plist` version key still carry (`PhotoCraft.app`,
-    /// `PhotoCraftVersion`): upstream's, until the packaging pass renames the bundles.
+    /// Upstream's product name (`PhotoCraft`): the macOS bundle name of releases made before the
+    /// app's Atelier installer, and the `Info.plist` version key (`PhotoCraftVersion`), which
+    /// keeps it. Atelier installers name the bundle after [`Self::product`]
+    /// ([`Self::mac_bundle_names`]).
     pub bundle: &'static str,
     /// What it's for, in a few words (English; the UI translates it by app id).
     pub tagline: &'static str,
@@ -72,6 +74,12 @@ impl CraftApp {
 
     pub fn repo_url(&self) -> String {
         format!("https://github.com/{}", self.repo)
+    }
+
+    /// The names its macOS app bundle may have, newest first, without `.app`: the Atelier name
+    /// (`Atelier Pigment`), then upstream's (`PhotoCraft`), which earlier releases used.
+    pub fn mac_bundle_names(&self) -> [&'static str; 2] {
+        [self.product, self.bundle]
     }
 
     /// The app's page on the Nation's site.
@@ -283,6 +291,13 @@ mod tests {
             assert!(TRADEMARK_NOTICE.contains(company), "{company}");
             assert!(TRADEMARK_NOTICE.contains(product), "{product}");
         }
+    }
+
+    #[test]
+    fn macos_bundles_are_found_under_the_atelier_name_first() {
+        let pigment = CraftApp::by_id("photocraft").unwrap();
+        assert_eq!(pigment.mac_bundle_names(), ["Atelier Pigment", "PhotoCraft"]);
+        assert_eq!(LAUNCHER.mac_bundle_names(), ["Atelier Gate", "ArtCraft Launcher"]);
     }
 
     #[test]

@@ -17,7 +17,8 @@ set -euo pipefail
 . "$(dirname "${BASH_SOURCE[0]}")/../env.sh"
 
 PKG=artcraft-launcher
-APP_NAME="ArtCraft Launcher"
+APP_NAME="Atelier Gate"         # the bundle (package.sh)
+EXE_NAME="ArtCraft Launcher"    # the executable inside it
 
 ARCH=universal
 while [ $# -gt 0 ]; do
@@ -92,9 +93,9 @@ fi
 mkdir -p "$MNT"
 hdiutil attach "$DMG" -readonly -nobrowse -noautoopen -mountpoint "$MNT" -quiet
 APP="$MNT/$APP_NAME.app"
-EXE="$APP/Contents/MacOS/$APP_NAME"
+EXE="$APP/Contents/MacOS/$EXE_NAME"
 if [ ! -x "$EXE" ]; then
-  echo "error: $(basename "$DMG") has no $APP_NAME.app/Contents/MacOS/$APP_NAME" >&2
+  echo "error: $(basename "$DMG") has no $APP_NAME.app/Contents/MacOS/$EXE_NAME" >&2
   exit 1
 fi
 echo "==> $APP_NAME.app"

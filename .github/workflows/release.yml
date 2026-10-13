@@ -1,5 +1,9 @@
-# Release pipeline: every push to `release` builds installers for every platform and creates or
-# updates the draft GitHub Release "ArtCraft Launcher v<version>" with SHA256SUMS.txt.
+# Release pipeline: every push to `release` builds the installers and creates or updates the draft
+# GitHub Release "Atelier Gate v<version>" with SHA256SUMS.txt.
+#
+# Atelier: for now only the macOS DMG is built, on GitHub's standard macOS runner, unsigned until
+# signing secrets are added. The other platforms build when listed in the repository variable
+# ATELIER_RELEASE_PLATFORMS (e.g. "windows linux"): see docs/upstream.md.
 # Recipe: craftrules release/playbook.md (photocraft is the reference implementation).
 #
 # Only the jobs that read secrets run in the `release` environment (restricted to the `release`
@@ -60,12 +64,14 @@ jobs:
             echo "date=$(date -u +%Y-%m-%d)"
             echo "prerelease=$pre"
           } >>"$GITHUB_OUTPUT"
-          echo "### ArtCraft Launcher v$v (\`${GITHUB_SHA::9}\`)" >>"$GITHUB_STEP_SUMMARY"
+          echo "### Atelier Gate v$v (\`${GITHUB_SHA::9}\`)" >>"$GITHUB_STEP_SUMMARY"
 
   macos:
     name: macOS universal
     needs: version
-    runs-on: macos-15-xlarge  # M2 Pro larger runner; use only in release.yml (actions_macos_xl budget caps spend)
+    # Atelier: the standard runner (free on public repos). Upstream uses macos-15-xlarge, a larger
+    # runner that is billed even on public repos.
+    runs-on: macos-15
     environment: release
     env:
       ARTCRAFT_LAUNCHER_VERSION: ${{ needs.version.outputs.version }}
@@ -115,6 +121,9 @@ jobs:
   windows:
     name: Windows ${{ matrix.arch }}
     needs: version
+    # Atelier: macOS installers only for now. Add `windows` to the repository variable
+    # ATELIER_RELEASE_PLATFORMS (Settings › Secrets and variables › Actions) to build it again.
+    if: contains(vars.ATELIER_RELEASE_PLATFORMS, 'windows')
     runs-on: windows-latest
     environment: release
     strategy:
@@ -167,6 +176,9 @@ jobs:
   linux:
     name: Linux ${{ matrix.arch }}
     needs: version
+    # Atelier: macOS installers only for now. Add `linux` to the repository variable
+    # ATELIER_RELEASE_PLATFORMS (Settings › Secrets and variables › Actions) to build it again.
+    if: contains(vars.ATELIER_RELEASE_PLATFORMS, 'linux')
     # The oldest GitHub-hosted image, so the binary only needs glibc >= 2.35 (Ubuntu 22.04+,
     # Debian 12+, Fedora 36+, RHEL 10).
     runs-on: ${{ matrix.runner }}
@@ -225,6 +237,9 @@ jobs:
   flatpak:
     name: Flatpak ${{ matrix.arch }}
     needs: [version, linux]
+    # Atelier: macOS installers only for now. Add `linux` to the repository variable
+    # ATELIER_RELEASE_PLATFORMS (Settings › Secrets and variables › Actions) to build it again.
+    if: contains(vars.ATELIER_RELEASE_PLATFORMS, 'linux')
     # Repackages the Linux job's tarball (the same binary as the AppImage/deb/rpm); no Rust
     # build here. 24.04 for a newer flatpak-builder (1.4) than 22.04 ships.
     runs-on: ${{ matrix.runner }}
@@ -263,6 +278,9 @@ jobs:
   freebsd:
     name: FreeBSD x86_64
     needs: version
+    # Atelier: macOS installers only for now. Add `freebsd` to the repository variable
+    # ATELIER_RELEASE_PLATFORMS (Settings › Secrets and variables › Actions) to build it again.
+    if: contains(vars.ATELIER_RELEASE_PLATFORMS, 'freebsd')
     # GitHub has no FreeBSD runners: build in a FreeBSD 14.3 VM, the same image and packages as
     # .github/workflows/freebsd.yml.
     runs-on: ubuntu-latest
@@ -306,6 +324,9 @@ jobs:
   web:
     name: Web (wasm)
     needs: version
+    # Atelier: macOS installers only for now. Add `web` to the repository variable
+    # ATELIER_RELEASE_PLATFORMS (Settings › Secrets and variables › Actions) to build it again.
+    if: contains(vars.ATELIER_RELEASE_PLATFORMS, 'web')
     runs-on: ubuntu-latest
     env:
       ARTCRAFT_LAUNCHER_VERSION: ${{ needs.version.outputs.version }}
@@ -337,7 +358,10 @@ jobs:
 
   release:
     name: Draft GitHub Release
+    # Atelier: the platform jobs left out by ATELIER_RELEASE_PLATFORMS are skipped; this job runs
+    # as long as none of them failed and the macOS build succeeded.
     needs: [version, macos, windows, linux, flatpak, freebsd, web]
+    if: ${{ !cancelled() && !contains(needs.*.result, 'failure') && needs.macos.result == 'success' }}
     runs-on: ubuntu-latest
     environment: release
     permissions:
@@ -383,7 +407,7 @@ jobs:
         working-directory: artifacts
         run: |
           tag="v$VERSION"
-          title="ArtCraft Launcher v$VERSION"
+          title="Atelier Gate v$VERSION"
           pre=()
           if [ "$PRERELEASE" = true ]; then pre=(--prerelease); fi
           if draft="$(gh release view "$tag" --json isDraft --jq .isDraft 2>/dev/null)"; then
