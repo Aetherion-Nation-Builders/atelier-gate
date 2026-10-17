@@ -69,5 +69,16 @@ and then upstream's (`PhotoCraft.app`, what releases before each app's Atelier i
 `CraftApp::mac_bundle_names`. When an update renames the bundle, the old copy goes to the Trash.
 Its own self-update works the same way (`ArtCraft Launcher.app` → `Atelier Gate.app`).
 
+The DMG window (`packaging/macos/dmg/`) is upstream's layout with the Gate mark on volcanic black
+and ochre accents, regenerated for the `Atelier Gate` volume by `generate.py`.
+
+Gate checks each download's SHA-256 and each bundle's id and version, but not a Developer ID
+signature: the Atelier apps are unsigned until the Nation has one. Upstream pins its own team
+(Learning Machines LLC), which the Atelier apps never carry; set `install::macos::TEAM_ID` to the
+Nation's team id once releases are signed.
+
+Each app's details page reads its pictures from upstream's `storytold/craft-launcher-assets` (they
+show the apps' own windows); `details::SCREENSHOTS_BASE` would point at a Nation repository instead.
+
 Still for the packaging pass: Windows and Linux installers, signing, the package scripts' messages
 and maintainer, and the AppStream brand colours.

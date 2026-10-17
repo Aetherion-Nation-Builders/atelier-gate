@@ -8,13 +8,16 @@
 //! The feed is input like any other: every field is optional, unknown fields are ignored, a field
 //! of the wrong type reads as missing, one bad entry never spoils the others, and download links
 //! must still point at the app's own GitHub releases.
+//!
+//! A developer can serve the feed and the builds from their own machine instead (see
+//! [`Feed::with_mirror`]): then links under the mirror are accepted too, and entries never go stale.
 
 use std::collections::BTreeMap;
 
 use serde::Deserialize;
 use serde::de::{DeserializeOwned, Deserializer};
 
-use crate::catalog::CraftApp;
+use crate::catalog::{CraftApp, GITHUB_OWNER};
 use crate::release::{self, Asset, Release};
 use crate::time::parse_rfc3339;
 use crate::version;
@@ -36,9 +39,13 @@ pub struct Feed {
     /// When the least recently fetched app was fetched (Unix seconds).
     pub last_fetched: Option<i64>,
     pub app_renames: Vec<AppRename>,
+    /// Repositories that moved, both under [`GITHUB_OWNER`]: a rename anywhere else is dropped.
     pub repo_renames: Vec<RepoRename>,
     pub announcements: Vec<Notice>,
     pub alerts: Vec<Notice>,
+    /// A local mirror's address (ending in `/`): downloads under it are accepted alongside GitHub's.
+    /// Never read from the feed itself; the caller sets it with [`Feed::with_mirror`].
+    pub mirror: Option<String>,
 }
 
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
@@ -114,6 +121,7 @@ impl Feed {
             repo_renames: raw.repo_renames.into_iter().filter_map(RawRepoRename::into_rename).collect(),
             announcements: raw.important_notices.announcements.into_iter().filter_map(|n| n.into_notice("announcement")).take(MAX_NOTICES).collect(),
             alerts: raw.important_notices.alerts.into_iter().filter_map(|n| n.into_notice("alert")).take(MAX_NOTICES).collect(),
+            mirror: None,
         };
         // App renames are news too: show them with the announcements.
         for r in &feed.app_renames {
@@ -128,7 +136,16 @@ impl Feed {
         Some(feed)
     }
 
-    /// The repo to ask GitHub about for `app`, following the feed's repo renames.
+    /// Trusts downloads under `base` (which must end in `/`) and keeps every entry fresh: a feed
+    /// served by `cargo xtask local serve` on the developer's own machine.
+    #[must_use]
+    pub fn with_mirror(mut self, base: &str) -> Self {
+        self.mirror = base.ends_with('/').then(|| base.to_string());
+        self
+    }
+
+    /// The repo to ask GitHub about for `app`, following the feed's repo renames. Always under
+    /// [`GITHUB_OWNER`]: the feed can move an app within the Nation's account, never out of it.
     pub fn repo_for(&self, app: &CraftApp) -> String {
         let mut repo = app.repo.to_string();
         // Follow a chain of moves (a → b → c), without looping forever.
@@ -146,7 +163,8 @@ impl Feed {
         let Some(entry) = self.apps.get(app.id) else { return FeedAnswer::AskGitHub };
         let Some(fetched_at) = entry.fetched_at else { return FeedAnswer::AskGitHub };
         // A timestamp from the future (clock skew) counts as just now; one too old doesn't count.
-        if now.saturating_sub(fetched_at) > MAX_AGE {
+        // A local mirror is as fresh as its last sync.
+        if self.mirror.is_none() && now.saturating_sub(fetched_at) > MAX_AGE {
             return FeedAnswer::AskGitHub;
         }
         // The feed's repo must be the app's, or one the feed says it moved to.
@@ -158,7 +176,7 @@ impl Feed {
         }
         match &entry.release {
             None => FeedAnswer::Fresh(None),
-            Some(r) => match r.to_release(&repo) {
+            Some(r) => match r.to_release(&repo, self.mirror.as_deref()) {
                 Some(release) => FeedAnswer::Fresh(Some(release)),
                 None => FeedAnswer::AskGitHub,
             },
@@ -167,16 +185,17 @@ impl Feed {
 }
 
 impl FeedRelease {
-    /// The release with only the downloads that belong to `repo`. `None` when it doesn't hold up
-    /// (no tag, or not a version).
-    fn to_release(&self, repo: &str) -> Option<Release> {
+    /// The release with only the downloads that belong to `repo` (or sit under `mirror`). `None`
+    /// when it doesn't hold up (no tag, or not a version).
+    fn to_release(&self, repo: &str, mirror: Option<&str>) -> Option<Release> {
         let version = version::parse(&self.tag)?;
         let prefix = release::download_prefix(repo);
+        let allowed = |url: &str| url.starts_with(&prefix) || mirror.is_some_and(|m| url.starts_with(m) && !url.contains(".."));
         let releases_page = format!("https://github.com/{repo}/releases/");
         let assets = self
             .assets
             .iter()
-            .filter(|(name, _, url, _)| release::valid_file_name(name) && url.starts_with(&prefix) && !url.contains(['?', '#', '\\']))
+            .filter(|(name, _, url, _)| release::valid_file_name(name) && allowed(url) && !url.contains(['?', '#', '\\']))
             .map(|(name, size, url, sha)| Asset {
                 name: name.clone(),
                 size: *size,
@@ -350,10 +369,12 @@ struct RawRepoRename {
 }
 
 impl RawRepoRename {
+    /// `None` unless both names are `owner/name` under [`GITHUB_OWNER`]. A feed that could send
+    /// an app's downloads to someone else's repository would make its checksums worthless (#90).
     fn into_rename(self) -> Option<RepoRename> {
         let ok = |r: &str| {
             let mut parts = r.split('/');
-            matches!((parts.next(), parts.next(), parts.next()), (Some(a), Some(b), None) if !a.is_empty() && !b.is_empty()
+            matches!((parts.next(), parts.next(), parts.next()), (Some(a), Some(b), None) if a.eq_ignore_ascii_case(GITHUB_OWNER) && !b.is_empty()
           && r.bytes().all(|c| c.is_ascii_alphanumeric() || b"-_./".contains(&c)))
         };
         (ok(&self.old_name) && ok(&self.new_name)).then(|| RepoRename {
@@ -512,21 +533,66 @@ mod tests {
     #[test]
     fn follows_repo_renames_but_never_trusts_a_repo_it_was_not_told_about() {
         let ours = app("photocraft").repo;
+        let moved_to = format!("{ours}-app");
         let moved = sample()
             .replace(
                 "\"repo_renames\": []",
-                &format!(r#""repo_renames": [{{"old_name": "{ours}", "new_name": "art/photocraft", "renamed_at": null}}]"#),
+                // The owner's case doesn't matter: GitHub's names are case-insensitive.
+                &format!(r#""repo_renames": [{{"old_name": "{}", "new_name": "{moved_to}", "renamed_at": null}}]"#, ours.to_uppercase()),
+            )
+            .replace(&format!("\"name\": \"PhotoCraft\", \"repo\": \"{ours}\""), &format!("\"name\": \"PhotoCraft\", \"repo\": \"{moved_to}\""))
+            .replace(&format!("github.com/{ours}/releases"), &format!("github.com/{moved_to}/releases"));
+        let feed = Feed::parse(&moved).unwrap();
+        assert_eq!(feed.repo_for(app("photocraft")), moved_to);
+        let FeedAnswer::Fresh(Some(r)) = feed.answer(app("photocraft"), NOW) else { panic!() };
+        assert!(r.assets[0].url.starts_with(&format!("https://github.com/{moved_to}/releases/download/")));
+        // The same entry without the rename: the repo doesn't match, so GitHub decides.
+        let unannounced = moved.replace(&format!(r#"{{"old_name": "{}", "new_name": "{moved_to}", "renamed_at": null}}"#, ours.to_uppercase()), "");
+        let feed = Feed::parse(&unannounced).unwrap();
+        assert_eq!(feed.answer(app("photocraft"), NOW), FeedAnswer::AskGitHub);
+    }
+
+    #[test]
+    fn a_rename_out_of_the_nations_account_is_dropped() {
+        // Even a feed that vouches for the new repository, with matching links and checksums,
+        // can't send an app's downloads to another account (#90).
+        let ours = app("photocraft").repo;
+        let moved = sample()
+            .replace(
+                "\"repo_renames\": []",
+                &format!(
+                    r#""repo_renames": [{{"old_name": "{ours}", "new_name": "art/photocraft", "renamed_at": null}},
+                                  {{"old_name": "art/photocraft", "new_name": "{ours}", "renamed_at": null}},
+                                  {{"old_name": "{ours}", "new_name": "{GITHUB_OWNER}.evil.example/photocraft", "renamed_at": null}}]"#
+                ),
             )
             .replace(&format!("\"name\": \"PhotoCraft\", \"repo\": \"{ours}\""), "\"name\": \"PhotoCraft\", \"repo\": \"art/photocraft\"")
             .replace(&format!("github.com/{ours}/releases"), "github.com/art/photocraft/releases");
         let feed = Feed::parse(&moved).unwrap();
-        assert_eq!(feed.repo_for(app("photocraft")), "art/photocraft");
-        let FeedAnswer::Fresh(Some(r)) = feed.answer(app("photocraft"), NOW) else { panic!() };
-        assert!(r.assets[0].url.starts_with("https://github.com/art/photocraft/releases/download/"));
-        // The same entry without the rename: the repo doesn't match, so GitHub decides.
-        let unannounced = moved.replace(&format!(r#"{{"old_name": "{ours}", "new_name": "art/photocraft", "renamed_at": null}}"#), "");
-        let feed = Feed::parse(&unannounced).unwrap();
+        assert!(feed.repo_renames.is_empty(), "{:?}", feed.repo_renames);
+        assert_eq!(feed.repo_for(app("photocraft")), ours);
         assert_eq!(feed.answer(app("photocraft"), NOW), FeedAnswer::AskGitHub);
+    }
+
+    #[test]
+    fn a_local_mirror_is_trusted_only_when_asked_for_and_never_goes_stale() {
+        const MIRROR: &str = "http://127.0.0.1:8787/";
+        let local = sample()
+            .replace(&format!("https://github.com/{}/releases/download/v0.6.0/", app("photocraft").repo), "http://127.0.0.1:8787/photocraft/v0.6.0/");
+        // Without the mirror, the local link is dropped like any other stranger's.
+        let FeedAnswer::Fresh(Some(r)) = Feed::parse(&local).unwrap().answer(app("photocraft"), NOW) else { panic!() };
+        assert!(r.assets.is_empty());
+        let feed = Feed::parse(&local).unwrap().with_mirror(MIRROR);
+        let FeedAnswer::Fresh(Some(r)) = feed.answer(app("photocraft"), NOW) else { panic!() };
+        assert_eq!(r.assets.len(), 1, "the mirror's file is kept, evil.example's still isn't");
+        assert_eq!(r.assets[0].url, "http://127.0.0.1:8787/photocraft/v0.6.0/photocraft-0.6.0-macos-universal.dmg");
+        // A week-old sync still counts.
+        assert!(matches!(feed.answer(app("photocraft"), NOW + 7 * 86_400), FeedAnswer::Fresh(Some(_))));
+        // Escaping the mirror's folder isn't allowed, and a base without its trailing slash isn't a mirror.
+        let escaping = local.replace("http://127.0.0.1:8787/photocraft/", "http://127.0.0.1:8787/../photocraft/");
+        let FeedAnswer::Fresh(Some(r)) = Feed::parse(&escaping).unwrap().with_mirror(MIRROR).answer(app("photocraft"), NOW) else { panic!() };
+        assert!(r.assets.is_empty());
+        assert_eq!(Feed::default().with_mirror("http://127.0.0.1:8787").mirror, None);
     }
 
     /// Contract check against what storyteller-web really serves: point `CRAFT_APPS_FEED_SAMPLE`

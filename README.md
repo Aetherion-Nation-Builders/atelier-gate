@@ -35,7 +35,7 @@ shows each app without a version to install.
   <img src="docs/screenshots/artcraft-launcher-grid.png" alt="Atelier Gate in the grid view (dark theme): a card for each Atelier app with its icon, status, version, release date and an Install or Open button" width="900">
 </p>
 <p align="center">
-  <img src="docs/screenshots/artcraft-launcher-table.png" alt="The same apps in the table view (light theme), with columns for what each app is inspired by, its status, installed and latest versions, and release date" width="900"><br>
+  <img src="docs/screenshots/artcraft-launcher-table.png" alt="The same apps in the table view (light theme), with columns for each app's status, installed and latest versions, and release date" width="900"><br>
   <sub>Switch between the grid and a sortable table (screenshots from the test suite, with sample releases).</sub>
 </p>
 
@@ -74,17 +74,24 @@ The web version shows the same catalog in the browser, with the latest download 
 
 ## Interface languages
 
-The interface is in English, Russian (Русский) or Simplified Chinese (简体中文). **Auto**, the
-default, follows the system or browser language; **Settings → Language** picks one and switches
-at once, and the choice is kept between runs. Simplified Chinese locales (`zh-CN`, `zh-SG`,
-`zh-Hans`, and POSIX forms such as `zh_CN.UTF-8`) select Chinese; Traditional Chinese ones don't.
-To try a language without changing the setting, start the desktop app with
-`ARTCRAFT_LAUNCHER_LOCALE=zh-CN`, or add `?lang=ru` to the web address.
+The interface is in English, Brazilian Portuguese (Português (Brasil)), Czech (Čeština), French
+(Français), German (Deutsch), Hungarian (Magyar), Japanese (日本語), Polish (Polski), Russian
+(Русский), Simplified Chinese (简体中文) or Spanish (Español). **Auto**, the default, follows the
+system or browser language; **Settings → Language** picks one and switches at once, and the choice
+is kept between runs. Czech locales (`cs-CZ`, `cs_CZ.UTF-8`…) select Czech, German ones (`de-DE`,
+`de-AT`, `de-CH`, `de_DE.UTF-8`…) German, French ones (`fr-FR`, `fr-CA`…) French, Hungarian ones
+(`hu`, `hu-HU`, `hu_HU.UTF-8`…) Hungarian, Japanese ones (`ja`, `ja-JP`, `ja_JP.UTF-8`…) Japanese,
+Polish ones (`pl`, `pl-PL`, `pl_PL.UTF-8`) Polish, Spanish ones (`es-ES`, `es-MX`, `es-419`…)
+Spanish, and Portuguese ones (`pt-BR`, and `pt-PT` too, for now) Brazilian Portuguese. Simplified
+Chinese locales (`zh-CN`, `zh-SG`, `zh-Hans`, and POSIX forms such as `zh_CN.UTF-8`) select
+Chinese; Traditional Chinese ones don't. To try a language without changing the setting, start the
+desktop app with `ARTCRAFT_LAUNCHER_LOCALE=pt-BR`, or add `?lang=ru` to the web address.
 
-Chinese is drawn with the system's own Chinese font (PingFang on macOS, Microsoft YaHei on
-Windows, Noto Sans CJK or WenQuanYi on Linux and FreeBSD). Where there is none, and in the web
-version, the interface stays in English and Settings says why. Product names and release notes
-stay as published; text without a translation falls back to English.
+The CJK languages are drawn with the system's own CJK font (Hiragino Sans or PingFang on macOS,
+Yu Gothic, Meiryo or Microsoft YaHei on Windows, Noto Sans CJK, IPA, Takao or WenQuanYi on Linux and
+FreeBSD). Where the system has no font for one, and in the web version, the interface stays in
+English and Settings says why. Product names and release notes stay as published; text without a
+translation falls back to English.
 
 ## Where apps are installed
 
@@ -97,6 +104,7 @@ installed by hand (and the launcher finds apps you installed yourself):
 | macOS | `/Applications/<App>.app` | Copied from the signed, notarized release DMG |
 | Windows | `C:\Program Files\<App>` | The release MSI, through Windows Installer (with Start menu entry and Apps & features entry) |
 | Linux | `/usr/bin`, `/usr/share/applications` | The release `.deb` (apt) or `.rpm` (dnf, zypper), with your system's password prompt. Without those, a Flatpak, or an AppImage in `~/Applications` |
+| Linux, inside the launcher's Flatpak, with no Flatpak on the host | `~/.var/app/ai.storyteller.artcraft-launcher/data/artcraft-launcher/apps/<app>` | The release tarball, unpacked into the launcher's own folder and run inside the same sandbox, with its settings in a `home/` folder beside it. Nothing is installed on the host, and each app's configuration stays in the sandbox |
 | FreeBSD | `/usr/local` | The release tree, with a password prompt (polkit); `~/.local` when polkit isn't installed |
 
 ArtCraft Launcher keeps itself current too: when a new version is out, **Update and restart**
@@ -106,12 +114,14 @@ package or portable folder, the AppImage, or the `.deb`/`.rpm`) and reopens it.
 Updates use the same format an app was installed with. Every download is checked against the
 release's published SHA-256 before it is installed, and a running app is never replaced.
 
+The launcher writes its log to `logs/artcraft-launcher.log` in its data folder
+(`~/.local/share/artcraft-launcher` on Linux, `~/Library/Application Support/Atelier Gate`
+on macOS, `%LOCALAPPDATA%\Atelier Gate` on Windows, `ArtCraftLauncherData` beside the
+portable zip's executable) and keeps the previous two runs as `artcraft-launcher.1.log` and
+`artcraft-launcher.2.log`. `RUST_LOG` changes what it records (`debug`, `info,zbus=warn`, …).
 
 ## License
 
 MIT OR Apache-2.0, like ArtCraft Launcher. Third-party material is listed in `ATTRIBUTION.md` and
 `NOTICE`. The Atelier and Aetherion names and marks are not covered by the license.
 
-<sub>Adobe, Microsoft, Autodesk and Avid product names are trademarks of their owners, used only
-to describe what each Atelier app is for. Atelier is independent and is not affiliated with,
-sponsored by or endorsed by any of these companies.</sub>
