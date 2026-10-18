@@ -33,7 +33,6 @@
 	Sort	Сортировка
 	Suite order	По классу приложений
 	Name	Имя
-	Inspired by	Вдохновлено
 	Status	Статус
 	Installed version	Установленная версия
 	Latest version	Последняя версия
@@ -74,6 +73,8 @@
 	Atelier Gate {version} is available.	Доступен Atelier Gate {version}.
 	Dismiss	Закрыть
 	Update and restart	Обновить и перезапустить
+	A new version is available. Would you like to relaunch with the updated version?	Доступна новая версия. Перезапустить с обновленной версией?
+	Later	Позже
 	What's new	Что нового
 	No notes were published with this release.	Заметки к этому релизу не публиковались.
 	Released {date}	Релиз {date}
@@ -81,9 +82,11 @@
 	Close	Закрыть
 	Atelier Gate {version}	Atelier Gate {version}
 	Only when I ask	Только по запросу
+	Automatically download and install updates	Автоматически скачивать и устанавливать обновления
 	Notify me when an installed app has an update	Уведомлять, когда у установленного приложения есть обновление
 	Include pre-releases (betas and release candidates)	Включать предварительные релизы (бета и RC)
 	Installing on Linux	Установка в Linux
+	Installing on Windows	Установка в Windows
 	Install new apps as	Устанавливать новые приложения как
 	System package (recommended)	Системный пакет (рек.)
 	Updates always use the format an app was installed with.	Обновления всегда используют формат, с которым приложение было установлено.
@@ -113,6 +116,10 @@
 	Apps on this computer	Приложения на этом компьютере
 	Installed apps with a newer version	Установленные приложения, у которых есть новая версия
 	Apps you can install	Приложения, которые можно установить
+	Hide App	Скрыть приложение
+	Unhide App	Показать приложение
+	Hidden Apps	Скрытые приложения
+	Apps you hid	Приложения, которые вы скрыли
 	Checked {ago} · using {sources}	Проверено {ago} · через {sources}
 	{a} and {b}	{a} и {b}
 	Join the Nation	Присоединиться к Nation
@@ -177,6 +184,7 @@ month	Nov	нояб.
 month	Dec	дек.
 	Not checked yet	Ещё не проверялось
 	GitHub's hourly limit was reached; full details return in {min} min	Достигнут часовой лимит GitHub; полные детали вернутся через {min} мин
+	GitHub limit hit; back in {min} min	Лимит GitHub исчерпан; вернётся через {min} мин
 	Installing for {platform}	Установка для {platform}
 	Downloads for {platform}	Скачивание для {platform}
 	No downloads for this system	Нет загрузок для этой системы
@@ -197,6 +205,7 @@ month	Dec	дек.
 	{version} installed → {latest} released	{version} установлено → {latest} выпущено
 	Version {version}	Версия {version}
 	{installed} installed · latest {latest}	{installed} установлено · последняя {latest}
+	Installed · latest {latest}	Установлено · последняя {latest}
 	Version {version} installed	Версия {version} установлена
 	Version {latest}	Версия {latest}
 	No release published yet	Релиз ещё не опубликован
@@ -210,7 +219,6 @@ month	Dec	дек.
 	Descending	По убыванию
 	Click to reverse the order	Нажмите, чтобы изменить порядок
 	Click to sort by this column	Нажмите, чтобы сортировать по этому столбцу
-	Like {name}	Аналог {name}
 	{done} of {total}	{done} из {total}
 	Downloading	Скачивание
 	Verifying checksum…	Проверка контрольной суммы…
@@ -220,7 +228,6 @@ month	Dec	дек.
 	Checking for updates…	Проверка обновлений…
 	Downloads the new version, replaces this one and opens it again	Скачивает новую версию, заменяет текущую и открывает её заново
 	Couldn't check for updates: {f}	Не удалось проверить обновления: {f}
-	Website (coming soon)	Веб-сайт (скоро)
 	GitHub repository	Репозиторий GitHub
 	Release feed	Лента релизов
 	Update 1 app	Обновить 1 приложение
@@ -250,6 +257,7 @@ column	Released	Дата релиза
 
 # Contextual: the filter tab names a group (the status pill says "Installed")
 filter	Installed	Установлены
+	{name} details	{name}: подробности
 
 # Plural forms for Russian (one|few|many)
 @plural	{n} app|{n} apps	{n} приложение|{n} приложения|{n} приложений
@@ -294,7 +302,6 @@ filter	Installed	Установлены
 @id	filter.notinstalled	Не установленные
 @id	sort.suite	По классу приложений
 @id	sort.name	Имя
-@id	sort.inspired	Вдохновлено
 @id	sort.status	Статус
 @id	sort.installed	Установленная версия
 @id	sort.latest	Последняя версия
@@ -318,3 +325,33 @@ filter	Installed	Установлены
 	Visit aetherionnnation.com	Открыть aetherionnnation.com
 	Atelier on GitHub	Atelier на GitHub
 @plural	Atelier Gate · {n} update available|Atelier Gate · {n} updates available	Atelier Gate · {n} обновление|Atelier Gate · {n} обновления|Atelier Gate · {n} обновлений
+	App details	О приложении
+	Close (Esc)	Закрыть (Esc)
+	Features	Возможности
+	Latest release	Последний релиз
+	Version	Версия
+	Platforms	Платформы
+	Releases	Релизы
+	Enlarge picture	Увеличить изображение
+	Click to enlarge	Нажмите, чтобы увеличить
+	Previous picture (←)	Предыдущее изображение (←)
+	Next picture (→)	Следующее изображение (→)
+	Loading pictures…	Загрузка изображений…
+	Pictures couldn't be loaded. Reopen this page to try again.	Не удалось загрузить изображения. Откройте страницу снова, чтобы повторить попытку.
+	Install folder	Папка установки
+	Default install folder	Папка установки по умолчанию
+	System default	По умолчанию в системе
+	Browse…	Обзор…
+	Use default	Использовать по умолчанию
+	New installs use this folder. Updates stay in their current location.	Новые приложения устанавливаются в эту папку. При обновлении текущее расположение сохраняется.
+	Custom folders use AppImage on Linux.	В Linux для установки в выбранную папку используется AppImage.
+	The system manages install locations here.	В этой среде расположением приложений управляет система.
+@msg	couldn't use install folder {path}: {reason}	не удалось использовать папку установки {path}: {reason}
+@msg	this release has no AppImage for a custom install folder	в этом выпуске нет AppImage для установки в выбранную папку
+@msg	custom install folders aren't supported on this system	в этой системе выбор папки установки не поддерживается
+@msg	{path} already exists and wasn't installed by Atelier Gate	{path} уже существует и не был установлен через Atelier Gate
+@msg	couldn't move {path} to Trash ({reason}). Remove it in Finder instead.	не удалось переместить {path} в Корзину ({reason}). Удалите его через Finder.
+	Apps are placed inside this folder.	Приложения размещаются внутри этой папки.
+	Replace what's there?	Заменить существующее?
+	{path} already exists. Installing {name} will overwrite it.	{path} уже существует. Установка {name} перезапишет его.
+	Replace	Заменить
