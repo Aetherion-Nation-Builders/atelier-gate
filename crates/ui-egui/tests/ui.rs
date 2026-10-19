@@ -850,17 +850,18 @@ fn links_to_the_website_github_and_each_apps_pages() {
     }
     // Cards: every app links to its repo and to its page on the Nation's site (plus the footer's).
     let shown_cards = h.query_all_by_label("GitHub").count() - 1;
-    let shown_sites = h.query_all_by_label("Website").count() - 1;
+    // Atelier: the footer's site link is the Nation icon, so no "Website" label is left there.
+    let shown_sites = h.query_all_by_label("Website").count();
     assert!(shown_cards >= 12, "{shown_cards}");
-    assert_eq!(shown_sites, 0, "the cards only link to GitHub; the website is the footer's icon");
+    assert_eq!(shown_sites, 0, "the cards only link to GitHub; the Nation's site is the footer's icon");
     // The table's … menu has the app's website and GitHub repo.
     let (mut h, _) = harness(ViewMode::Table, egui::Theme::Dark, true);
     h.run_steps(6);
     h.get_all_by_label("…").nth(7).unwrap().click(); // Scribe
     h.run_steps(3);
     h.get_by_label("GitHub repository");
-    // The footer's Website link and Scribe's in the menu.
-    assert!(h.query_all_by_label_contains("Website").count() >= 2);
+    // Scribe's Website link in the menu (the footer's site link is the Nation icon).
+    assert!(h.query_all_by_label_contains("Website").count() >= 1);
 }
 
 /// Clicks the `n`th widget labelled `label` and returns the URL the app asked to open.
