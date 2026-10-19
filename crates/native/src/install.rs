@@ -2204,11 +2204,11 @@ mod tests {
     fn arch_packages_from_a_repository_are_updated_with_the_system() {
         let app = artcraft_launcher_core::CraftApp::by_id("wordcraft").unwrap();
         let hint = pacman_update_hint(app, "wordcraft-bin", Some("omarchy"));
-        assert!(hint.starts_with("WordCraft was installed from the omarchy repository or the AUR (wordcraft-bin)."));
+        assert!(hint.starts_with("Scribe was installed from the omarchy repository or the AUR (wordcraft-bin)."));
         assert!(hint.ends_with("or sudo pacman -Syu"));
 
         let aur_hint = pacman_update_hint(app, "wordcraft-bin", None);
-        assert!(aur_hint.starts_with("WordCraft was installed from the AUR (wordcraft-bin)."));
+        assert!(aur_hint.starts_with("Scribe was installed from the AUR (wordcraft-bin)."));
 
         let si = "Repository      : omarchy\nName            : wordcraft-bin\nVersion         : 0.6.1-1\n";
         assert_eq!(parse_pacman_repo(si).as_deref(), Some("omarchy"));

@@ -844,8 +844,8 @@ fn the_uninstall_prompt_keeps_its_own_size_after_a_taller_dialog() {
 fn links_to_the_website_github_and_each_apps_pages() {
     let (mut h, _) = harness(ViewMode::Grid, egui::Theme::Dark, true);
     h.run_steps(6);
-    // Footer: website, GitHub and the Nation.
-    for label in ["Website", "GitHub", "Nation"] {
+    // Footer: the Nation and GitHub.
+    for label in ["GitHub", "Nation"] {
         assert!(h.query_all_by_label(label).count() >= 1, "{label}");
     }
     // Cards: every app links to its repo and to its page on the Nation's site (plus the footer's).
@@ -1949,10 +1949,11 @@ fn an_apps_page_is_a_card_in_the_middle_with_next_and_previous_arrows_and_closes
     // A card with a margin of window all round, not a panel against one edge.
     let close = h.get_by_label("Close (Esc)").rect();
     assert!(close.right() < 1180.0 - 24.0 && close.left() > 24.0, "{close:?}");
-    // Next goes to the following app in the grid's order (Word after Photo), and back again.
+    // Next goes to the following app in the grid's order (installed apps by name: Prism after
+    // Pigment), and back again.
     h.get_by_label("Next app").click();
     h.run_steps(12);
-    assert!(showing(&h, "wordcraft"));
+    assert!(showing(&h, "effectcraft"));
     h.get_by_label("Previous app").click();
     h.run_steps(12);
     assert!(showing(&h, "photocraft"));
