@@ -1,0 +1,30 @@
+# Throwaway: reproduces the release job's macOS build to read its error. Never merged.
+name: Verify macOS build
+on:
+  push:
+    branches: ["verify/**"]
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin, x86_64-apple-darwin
+      - name: Build like the release
+        shell: bash
+        run: |
+          set -o pipefail
+          for t in aarch64-apple-darwin x86_64-apple-darwin; do
+            cargo build --release --locked -p artcraft-launcher --target "$t" 2>&1 | tee -a build.log
+          done
+      - name: Report
+        if: failure()
+        shell: bash
+        run: |
+          sed 's/\x1b\[[0-9;]*[A-Za-z]//g' build.log > plain.log
+          grep -n -E "^error|panicked|warning: build failed|failed to run custom build" plain.log | head -20 | while read -r l; do echo "::error title=Build::${l:0:800}"; done
+          grep -A12 -E "^error" plain.log | head -60 | tr '\n' ' ' | cut -c1-3000 | sed 's/^/::error title=Context::/'
+          echo "::error title=Tail::$(tail -c 2500 plain.log | tr '\n' ' ')"
