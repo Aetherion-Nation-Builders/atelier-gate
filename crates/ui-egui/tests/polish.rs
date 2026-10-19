@@ -113,7 +113,7 @@ fn polish_ui_translates_labels_dates_and_messages() {
     h.run_steps(8);
     snapshot(&mut h, "grid-pl-dark");
     // Product names stay in English.
-    h.get_by_label("Gate");
+    assert!(h.query_by_label("Gate").is_none());
     h.get_by_label("Aetherion Nation");
     h.get_by_label("Edycja zdjęć");
     h.get_by_label("Zaktualizuj do 0.5.0");
