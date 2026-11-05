@@ -186,10 +186,10 @@ fn georgian_switches_persists_and_keeps_install_actions() {
     h.get_by_label("მზადაა").click_accesskit();
     h.run_steps(3);
     h.get_by_label("გამოსახულებების რედაქტირება");
-    h.get_by_label_contains("შემოწმდა 3 წუთის წინ · წყარო: ArtCraft API");
+    h.get_by_label_contains("შემოწმდა 3 წუთის წინ · წყარო: Release feed");
     h.get_by_label("განახლება ვერსიამდე 0.5.0");
     // Product names stay in English.
-    assert!(h.query_by_label("Launcher").is_none());
+    assert!(h.query_by_label("Gate").is_none());
     snapshot(&mut h, "grid-ka-dark");
     h.get_by_label("ყველას განახლება (2)").click();
     h.run_steps(2);

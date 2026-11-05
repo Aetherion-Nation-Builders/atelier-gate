@@ -192,7 +192,7 @@ fn german_switches_persists_and_keeps_install_actions() {
     let (mut retry, _) = harness_language(ViewMode::Table, egui::Theme::Light, true, &restored.language, kept.into());
     retry.run_steps(6);
     let slot = retry.query_all_by_label("Installieren").next().unwrap().rect().width();
-    for app in ["PhotoCraft", "VectorCraft"] {
+    for app in ["Pigment", "Quill"] {
         let menu = retry.get_by_label(&format!("Weitere Aktionen für {app}")).rect();
         // The main button is the one ending just left of the menu (or overlapping it).
         let main = retry
@@ -231,7 +231,7 @@ fn main_buttons_fit_the_narrowest_window(language: &str) {
         h.set_size(egui::vec2(720.0, 1600.0));
         h.run_steps(8);
         let slot = h.query_all_by_label(t("Install")).next().unwrap().rect().width();
-        for app in ["PhotoCraft", "VectorCraft", "EffectCraft"] {
+        for app in ["Pigment", "Quill", "Prism"] {
             let menu = h.get_by_label(&fmt(t("More actions for {name}"), &[("name", app)])).rect();
             let main = h
                 .query_all_by_role(egui::accesskit::Role::Button)

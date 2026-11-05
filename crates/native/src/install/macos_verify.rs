@@ -79,8 +79,16 @@ fn assessment_accepted(output: &str) -> bool {
 mod tests {
     use super::*;
 
+    /// Atelier lists no app with its own bundle id and team; this stands in for upstream's
+    /// SolidCraft (a community app signed by its own team).
     fn solidcraft() -> &'static CraftApp {
-        CraftApp::by_id("solidcraft").unwrap()
+        static SC: CraftApp = CraftApp {
+            bundle: Some("io.tangencylabs.solidcraft"),
+            former_bundles: &["ai.storyteller.solidcraft", "ai.storyteller.solvecraft"],
+            mac_team: Some("G5QA5U5X2S"),
+            ..artcraft_launcher_core::SUITE[10]
+        };
+        &SC
     }
 
     // Verbatim stdout captured by the real macOS --raw assessment (receipt 653b8b).
@@ -150,7 +158,8 @@ mod tests {
         assert!(sc.contains("identifier \"io.tangencylabs.solidcraft\""));
         assert!(sc.contains("identifier \"ai.storyteller.solidcraft\""));
         let photo = CraftApp::by_id("photocraft").unwrap();
-        let official = identity_requirement(photo, photo.mac_team.unwrap()).unwrap();
+        // Atelier records no team for its apps; an official one signed by upstream's would read so.
+        let official = identity_requirement(photo, "DJ6XS33FX8").unwrap();
         assert!(official.contains("DJ6XS33FX8"));
         assert!(official.contains("identifier \"ai.storyteller.photocraft\""));
         assert!(!official.contains("G5QA5U5X2S"));

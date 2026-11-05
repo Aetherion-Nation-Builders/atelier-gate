@@ -582,9 +582,13 @@ mod tests {
     fn a_feed_url_cannot_traverse_out_of_the_repository() {
         // The feed advertises a legitimate tag but points the asset at another repository by
         // climbing out with `../` after the approved prefix (CWE-180).
+        // (The sample names the Atelier repository: `sample` rewrites upstream's.)
+        let repo = app("photocraft").repo;
         let escaped = sample().replace(
-            "https://github.com/storytold/photocraft/releases/download/v0.6.0/photocraft-0.6.0-macos-universal.dmg",
-            "https://github.com/storytold/photocraft/releases/download/../../../../attacker/repo/releases/download/v99/photocraft-0.6.0-macos-universal.dmg",
+            &format!("https://github.com/{repo}/releases/download/v0.6.0/photocraft-0.6.0-macos-universal.dmg"),
+            &format!(
+                "https://github.com/{repo}/releases/download/../../../../attacker/repo/releases/download/v99/photocraft-0.6.0-macos-universal.dmg"
+            ),
         );
         let FeedAnswer::Fresh(Some(r)) = Feed::parse(&escaped).unwrap().answer(app("photocraft"), NOW) else { panic!() };
         assert!(r.assets.is_empty(), "the traversing download must be rejected");

@@ -718,7 +718,7 @@ impl LauncherUi {
         }
         self.settings.tray_hint_shown = true;
         host.notify(
-            tl!("ArtCraft Launcher is still running"),
+            tl!("Atelier Gate is still running"),
             tl!("It's in the tray: open it or quit it from the tray icon, or turn this off in the settings."),
         );
     }

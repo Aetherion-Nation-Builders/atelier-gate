@@ -157,7 +157,12 @@ mod tests {
 
     #[test]
     fn solidcraft_flatpak_is_found_under_its_older_ids_current_first() {
-        let sc = CraftApp::by_id("solidcraft").unwrap();
+        // Atelier lists no app with its own bundle id; this one stands in for upstream's SolidCraft.
+        let sc = &CraftApp {
+            bundle: Some("io.tangencylabs.solidcraft"),
+            former_bundles: &["ai.storyteller.solidcraft", "ai.storyteller.solvecraft"],
+            ..*CraftApp::by_id("cadcraft").unwrap()
+        };
         let old = pkgs(InstallSource::Flatpak, parse_flatpak_list("ai.storyteller.solvecraft\t0.7.0\n"));
         assert_eq!(find(sc, &old, &[InstallSource::Flatpak]).map(|p| p.name.as_str()), Some("ai.storyteller.solvecraft"));
         let both = pkgs(InstallSource::Flatpak, parse_flatpak_list("ai.storyteller.solidcraft\t0.8.0\nio.tangencylabs.solidcraft\t0.25.1\n"));
@@ -169,7 +174,12 @@ mod tests {
 
     #[test]
     fn a_user_flatpak_beats_a_system_one_under_any_id() {
-        let sc = CraftApp::by_id("solidcraft").unwrap();
+        // Atelier lists no app with its own bundle id; this one stands in for upstream's SolidCraft.
+        let sc = &CraftApp {
+            bundle: Some("io.tangencylabs.solidcraft"),
+            former_bundles: &["ai.storyteller.solidcraft", "ai.storyteller.solvecraft"],
+            ..*CraftApp::by_id("cadcraft").unwrap()
+        };
         let mut installed = pkgs(InstallSource::Flatpak, parse_flatpak_list("io.tangencylabs.solidcraft\t0.25.1\n"));
         installed.push(Package {
             manager: InstallSource::Flatpak,
