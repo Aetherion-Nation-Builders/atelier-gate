@@ -5,6 +5,14 @@
 //! Text here is English, the source the UI translates from: each `tagline` has a catalog row
 //! keyed by the app id (`tr_ctx(app.id, app.tagline)` in `ui-egui`).
 
+/// Who makes an app. Every Atelier app is the Nation's own ([`AppKind::Official`]); upstream also
+/// lists community apps, which Gate leaves out until the Nation forks them.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum AppKind {
+    Official,
+    Community,
+}
+
 /// One app in the suite.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct CraftApp {
@@ -19,7 +27,7 @@ pub struct CraftApp {
     /// app's Atelier installer, and the `Info.plist` version key (`PhotoCraftVersion`), which
     /// keeps it. Atelier installers name the bundle after [`Self::product`]
     /// ([`Self::mac_bundle_names`]).
-    pub bundle: &'static str,
+    pub upstream_name: &'static str,
     /// What it's for, in a few words (English; the UI translates it by app id).
     pub tagline: &'static str,
     /// Brand colour (sRGB), for surfaces: getartcraft.com's `--app`.
@@ -34,12 +42,27 @@ pub struct CraftApp {
     pub former_ids: &'static [&'static str],
     /// Older display names its installers registered (PdfCraft's MSI said PrintCraft until 0.2.1).
     pub former_names: &'static [&'static str],
+    pub kind: AppKind,
+    /// Who publishes it, as the card's byline shows it (`Aetherion Nation`).
+    pub publisher: &'static str,
+    /// The publisher its Windows installer names, when it isn't the Nation's.
+    pub msi_publisher: Option<&'static str>,
+    /// The bundle id when it isn't `ai.storyteller.<id>`.
+    pub bundle: Option<&'static str>,
+    /// Older bundle ids its Flatpak shipped under.
+    pub former_bundles: &'static [&'static str],
+    /// Its website, when it isn't its page on the Nation's site.
+    pub site: Option<&'static str>,
+    /// The Apple Developer team whose Developer ID signature its macOS build must carry. `None`
+    /// for every Atelier app until the Nation signs its releases: Gate then opens a copy that's
+    /// there and links to the releases, but installs nothing on macOS.
+    pub mac_team: Option<&'static str>,
 }
 
 impl CraftApp {
     /// `ai.storyteller.<id>`: macOS bundle id, Flatpak id and Linux desktop-file id.
     pub fn bundle_id(&self) -> String {
-        format!("ai.storyteller.{}", self.id)
+        self.bundle.map_or_else(|| format!("ai.storyteller.{}", self.id), str::to_string)
     }
 
     pub fn releases_url(&self) -> String {
@@ -53,12 +76,22 @@ impl CraftApp {
     /// The names its macOS app bundle may have, newest first, without `.app`: the Atelier name
     /// (`Atelier Pigment`), then upstream's (`PhotoCraft`), which earlier releases used.
     pub fn mac_bundle_names(&self) -> [&'static str; 2] {
-        [self.product, self.bundle]
+        [self.product, self.upstream_name]
     }
 
     /// The app's page on the Nation's site.
     pub fn website(&self) -> String {
-        format!("{WEBSITE_URL}/atelier/{}", self.name.to_lowercase())
+        self.site.map_or_else(|| format!("{WEBSITE_URL}/atelier/{}", self.name.to_lowercase()), str::to_string)
+    }
+
+    /// Whether the launcher installs this app from a `kind` package.
+    pub fn installs(&self, kind: crate::PackageKind) -> bool {
+        kind != crate::PackageKind::Dmg || self.mac_team.is_some() || INSTALLS_UNSIGNED_MAC_BUILDS
+    }
+
+    /// Bundle ids this app may be installed under, current first.
+    pub fn bundle_ids(&self) -> impl Iterator<Item = String> + '_ {
+        std::iter::once(self.bundle_id()).chain(self.former_bundles.iter().map(|b| b.to_string()))
     }
 
     /// Asset stems this app's releases may use, current first.
@@ -79,12 +112,32 @@ impl CraftApp {
 
 const fn app(
     id: &'static str,
-    [name, product, bundle]: [&'static str; 3],
+    [name, product, upstream_name]: [&'static str; 3],
     tagline: &'static str,
     [color, ink_light, ink_dark]: [[u8; 3]; 3],
     repo: &'static str,
 ) -> CraftApp {
-    CraftApp { id, name, product, bundle, tagline, color, ink_light, ink_dark, repo, former_ids: &[], former_names: &[] }
+    CraftApp {
+        id,
+        name,
+        product,
+        upstream_name,
+        tagline,
+        color,
+        ink_light,
+        ink_dark,
+        repo,
+        former_ids: &[],
+        former_names: &[],
+        kind: AppKind::Official,
+        publisher: "Aetherion Nation",
+        msi_publisher: None,
+        bundle: None,
+        former_bundles: &[],
+        site: None,
+        // The Nation's releases are unsigned (see `mac_team`).
+        mac_team: None,
+    }
 }
 
 /// Atelier, in display order (upstream's order, which follows its website).
@@ -179,6 +232,12 @@ pub const SUITE: [CraftApp; 12] = [
     ),
 ];
 
+/// Atelier: the Nation's macOS releases carry no Developer ID signature yet, so Gate installs a
+/// DMG with no signing team ([`CraftApp::mac_team`] `None`) after checking the download's
+/// checksum and the bundle's id and version, as Atelier Gate always has. Upstream refuses such a
+/// build; turn this off (and record each app's team) once the Nation signs its releases.
+pub const INSTALLS_UNSIGNED_MAC_BUILDS: bool = true;
+
 /// The Nation's website.
 pub const WEBSITE_URL: &str = "https://www.aetherionnnation.com";
 /// The GitHub account every Atelier app's repository lives under: the only one Gate installs
@@ -214,9 +273,47 @@ pub const LAUNCHER_REPO: &str = "Aetherion-Nation-Builders/atelier-gate";
 /// The launcher's own asset stem.
 pub const LAUNCHER_ID: &str = "artcraft-launcher";
 
+/// An Atelier app's 128 px icon (PNG), in `assets/app-icons` (each Atelier app's own): the UI
+/// draws it, and the Linux install puts it in the desktop menu.
+pub fn app_icon_png(id: &str) -> Option<&'static [u8]> {
+    Some(match id {
+        "photocraft" => include_bytes!("../../../assets/app-icons/photocraft.png"),
+        "vectorcraft" => include_bytes!("../../../assets/app-icons/vectorcraft.png"),
+        "filmcraft" => include_bytes!("../../../assets/app-icons/filmcraft.png"),
+        "lightcraft" => include_bytes!("../../../assets/app-icons/lightcraft.png"),
+        "pdfcraft" => include_bytes!("../../../assets/app-icons/pdfcraft.png"),
+        "effectcraft" => include_bytes!("../../../assets/app-icons/effectcraft.png"),
+        "designcraft" => include_bytes!("../../../assets/app-icons/designcraft.png"),
+        "wordcraft" => include_bytes!("../../../assets/app-icons/wordcraft.png"),
+        "deckcraft" => include_bytes!("../../../assets/app-icons/deckcraft.png"),
+        "gridcraft" => include_bytes!("../../../assets/app-icons/gridcraft.png"),
+        "cadcraft" => include_bytes!("../../../assets/app-icons/cadcraft.png"),
+        "soundcraft" => include_bytes!("../../../assets/app-icons/soundcraft.png"),
+        _ => return None,
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn every_app_has_its_icon() {
+        for app in &SUITE {
+            let png = app_icon_png(app.id).unwrap_or_else(|| panic!("no icon for {}", app.id));
+            assert!(png.starts_with(b"\x89PNG\r\n\x1a\n"), "{} icon isn't a PNG", app.id);
+        }
+        assert!(app_icon_png("notacraft").is_none());
+    }
+
+    #[test]
+    fn every_app_is_the_nations_and_unsigned_on_macos_for_now() {
+        for a in &SUITE {
+            assert_eq!((a.kind, a.publisher, a.mac_team), (AppKind::Official, "Aetherion Nation", None), "{}", a.id);
+            assert_eq!(a.bundle_id(), format!("ai.storyteller.{}", a.id));
+            assert!(a.installs(crate::PackageKind::Dmg) && a.installs(crate::PackageKind::Msi), "{}", a.id);
+        }
+    }
 
     #[test]
     fn suite_has_twelve_apps_with_unique_ids() {
@@ -229,7 +326,7 @@ mod tests {
             assert_eq!(a.repo, format!("Aetherion-Nation-Builders/atelier-{}", a.name.to_lowercase()));
             assert!(a.id.ends_with("craft"), "{}: machine names stay upstream's", a.id);
             assert_eq!(a.product, format!("Atelier {}", a.name));
-            assert_eq!(a.bundle.to_lowercase(), a.id, "macOS bundles keep upstream's name");
+            assert_eq!(a.upstream_name.to_lowercase(), a.id, "macOS bundles keep upstream's name");
         }
         assert_eq!(LAUNCHER.repo, LAUNCHER_REPO);
     }

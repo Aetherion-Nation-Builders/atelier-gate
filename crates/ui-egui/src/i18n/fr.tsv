@@ -18,6 +18,7 @@
 
 	Gate	Gate
 	Aetherion Nation	Aetherion Nation
+	by {name}	par {name}
 	Open Source Tools for Creatives, Makers, and Builders	Des outils open source pour les créatifs, les makers et les bâtisseurs
 	Settings	Réglages
 	Check for updates	Rechercher des mises à jour
@@ -74,6 +75,7 @@
 	Dismiss	Ignorer
 	Update and restart	Mettre à jour et redémarrer
 	A new version is available. Would you like to relaunch with the updated version?	Une nouvelle version est disponible. Redémarrer avec la nouvelle version ?
+	A new version is available. Download it to replace this version?	Une nouvelle version est disponible. La télécharger pour remplacer cette version ?
 	Later	Plus tard
 	What's new	Nouveautés
 	No notes were published with this release.	Aucune note n'a été publiée avec cette version.
@@ -92,6 +94,8 @@
 	Updates always use the format an app was installed with.	Les mises à jour utilisent toujours le format avec lequel l'application a été installée.
 	Running in the background	Exécution en arrière-plan
 	Keep running in the tray when the window is closed	Rester actif dans la zone de notification à la fermeture de la fenêtre
+	Atelier Gate is still running	Atelier Gate est toujours en cours
+	It's in the tray: open it or quit it from the tray icon, or turn this off in the settings.	Il est dans la zone de notification : ouvrez-le ou quittez-le depuis son icône, ou désactivez ceci dans les réglages.
 	Show the window on the current desktop	Afficher la fenêtre sur le bureau actuel
 	Start Atelier Gate when I log in	Lancer Atelier Gate à l'ouverture de session
 	Community	Communauté
@@ -116,6 +120,12 @@
 	Apps on this computer	Applications sur cet ordinateur
 	Installed apps with a newer version	Applications installées avec une version plus récente
 	Apps you can install	Applications que vous pouvez installer
+	Pin to top	Épingler en haut
+	Unpin	Désépingler
+	Pinned	Épinglés
+	Reorder {name}	Réordonner {name}
+	Move up	Monter
+	Move down	Descendre
 	Hide App	Masquer l'application
 	Unhide App	Afficher l'application
 	Hidden Apps	Applications masquées
@@ -141,6 +151,7 @@
 	Update cancelled	Mise à jour annulée
 	Uninstall cancelled	Désinstallation annulée
 	Retry install	Réessayer l'installation
+	Retry update	Réessayer la mise à jour
 	Retry update to {version}	Réessayer la mise à jour vers {version}
 	The download is still here. It's checked again, then installed.	Le téléchargement est toujours là. Il sera vérifié à nouveau, puis installé.
 	Waiting for another app…	En attente d'une autre application…
@@ -332,6 +343,7 @@ filter	Installed	Installées
 	Visit aetherionnnation.com	Visiter aetherionnnation.com
 	Atelier on GitHub	Atelier sur GitHub
 	App details	Détails de l'application
+	More actions for {name}	Autres actions pour {name}
 	Close (Esc)	Fermer (Esc)
 	Features	Fonctionnalités
 	Latest release	Dernière version
@@ -352,6 +364,7 @@ filter	Installed	Installées
 	Use default	Par défaut
 	New installs use this folder. Updates stay in their current location.	Les nouvelles installations utilisent ce dossier. Les mises à jour conservent leur emplacement actuel.
 	Custom folders use AppImage on Linux.	Les dossiers personnalisés utilisent AppImage sous Linux.
+	On Linux, custom folders use AppImage format.	Les dossiers personnalisés utilisent AppImage sous Linux.
 	The system manages install locations here.	Le système gère les emplacements d’installation ici.
 @msg	couldn't use install folder {path}: {reason}	impossible d’utiliser le dossier d’installation {path} : {reason}
 @msg	this release has no AppImage for a custom install folder	cette version ne propose pas d’AppImage pour un dossier d’installation personnalisé
@@ -371,3 +384,20 @@ filter	Installed	Installées
 	Show {n} more changes	Afficher {n} modifications de plus
 	Last updated: {date}	Dernière mise à jour : {date}
 column	Version	Version
+column	Author	Auteur
+	Choose version	Choisir une version
+	latest {version}	dernière {version}
+	{version} (latest release)	{version} (dernière version)
+	Launcher version	Version du lanceur
+	Nightly	Nocturne
+	Nightly (none published yet)	Nocturne (pas encore publiée)
+	Install version {version}	Installer la version {version}
+	Download selected version	Télécharger la version choisie
+	Older launcher versions require a manual reinstall.	Les anciennes versions du lanceur nécessitent une réinstallation manuelle.
+	Your files may not open in older versions.	Tes fichiers pourraient ne pas s’ouvrir avec une ancienne version.
+	Enable automatic installs in Settings to follow new nightly builds.	Active les installations automatiques dans les paramètres pour recevoir les nouvelles versions nocturnes.
+	Hide community apps	Masquer les applications communautaires
+	Advanced	Avancé
+	Migrate Flatpak bundles to ArtCraft OCI (experimental)	Migrer les paquets Flatpak vers ArtCraft OCI (expérimental)
+	On update, switch first party apps when the matching package is available. Otherwise, keep using bundles.	Lors des mises à jour, migrer les applications ArtCraft si le paquet correspondant est disponible. Sinon, continuer à utiliser les paquets autonomes.
+	The OCI repository is a preview with GPG verification disabled.	Le dépôt OCI est une version préliminaire avec la vérification GPG désactivée.
