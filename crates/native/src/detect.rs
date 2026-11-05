@@ -384,6 +384,9 @@ pub mod windows {
     /// disk.
     fn candidates_in_roots(app: &CraftApp, roots: &[PathBuf]) -> Vec<PathBuf> {
         let mut out: Vec<PathBuf> = suite_folders(app, roots).iter().flat_map(|dir| exe_candidates(app, Some(dir), &[])).collect();
+        // Atelier: the apps' MSIs keep upstream's install policy, `ArtCraft\<upstream name>`
+        // (`ArtCraft\DeckCraft` for Podium), which the display names below don't spell.
+        out.extend(roots.iter().flat_map(|root| exe_candidates(app, Some(root.join("ArtCraft").join(app.upstream_name).as_path()), &[])));
         let mut dirs: Vec<PathBuf> = roots.iter().map(|root| root.join("ArtCraft")).collect();
         dirs.extend(roots.iter().cloned());
         out.extend(exe_candidates(app, None, &dirs));
