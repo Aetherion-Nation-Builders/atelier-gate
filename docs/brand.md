@@ -4,8 +4,9 @@ Atelier Gate is ArtCraft Launcher with a different name on the door, pointed at 
 apps. We keep the change small on purpose: upstream lands changes often, and every file we touch
 is a file that can conflict when we pull them in.
 
-**Renamed (what a person sees):** the window title, header (the Gate mark and "Atelier", a "Gate"
-tag, "Aetherion Nation"), Settings, the tray / menu-bar menu and tooltip, notifications, the
+**Renamed (what a person sees):** the window title, header (the Gate mark, "Atelier" and
+"Aetherion Nation"; upstream dropped its "Launcher" tag, so the "Gate" tag went with it), the
+footer's Nation icon (where upstream shows Discord), Settings, the tray / menu-bar menu and tooltip, notifications, the
 "start when I log in" entry, messages, the Russian and Chinese catalogs, the app names in the
 catalog (Pigment, Quill, Reel, Lens, Seal, Prism, Press, Scribe, Podium, Ledger, Blueprint,
 Frequency) and their icons, every link (the Nation's site, each app's page at

@@ -30,7 +30,10 @@ MAC="$TMP/mac.svg"
 sed "s/$BOX/viewBox=\"-62.136 -62.136 636.272 636.272\"/" "$SVG" >"$MAC"
 FLAT="$SVG"
 
-render() { resvg -w "$2" -h "$2" "$1" "$3" </dev/null; }
+render() {
+  local src="$1" size="$2" out="$3"
+  resvg -w "$size" -h "$size" "$src" "$out" </dev/null
+}
 
 render "$MAC" 1024 "$DIR/artcraft-launcher-1024.png"
 
