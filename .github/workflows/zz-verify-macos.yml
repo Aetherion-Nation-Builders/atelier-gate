@@ -1,0 +1,31 @@
+# Throwaway: the macOS-only code paths (DMG install, signature checks) that PR CI doesn't build
+# (it runs Linux and Windows). Never merged.
+name: Verify macOS
+on:
+  push:
+    branches: ["verify/**"]
+permissions:
+  contents: read
+jobs:
+  macos:
+    runs-on: macos-15
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: clippy and tests (core, native, the app)
+        shell: bash
+        run: |
+          set -o pipefail
+          cargo clippy --locked -p artcraft-launcher-core -p artcraft-launcher-native -p artcraft-launcher --all-targets -- -D warnings 2>&1 | tee check.log
+          cargo test --locked --no-fail-fast -p artcraft-launcher-core -p artcraft-launcher-native 2>&1 | tee -a check.log
+      - name: Report
+        if: failure()
+        shell: bash
+        run: |
+          sed 's/\x1b\[[0-9;]*[A-Za-z]//g' check.log > plain.log
+          grep -E "^test .* FAILED$|^error(\[E[0-9]+\])?:|panicked at|^\s+--> " plain.log | sort -u | head -40 | while read -r l; do echo "::error title=macOS::${l:0:800}"; done
+          grep -A12 -E "^---- .* stdout ----" plain.log | head -120 | tr '\n' ' ' | fold -w 900 | head -6 | while read -r c; do echo "::error title=stdout::$c"; done
