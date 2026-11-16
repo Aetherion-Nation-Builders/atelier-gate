@@ -49,6 +49,10 @@
 	Install	Instalar
 	Update to {v}	Actualizar a {v}
 	Open	Abrir
+	Open {version}	Abrir {version}
+	Open {installed} without updating. {latest} stays available.	Abrir {installed} sin actualizar. {latest} sigue disponible.
+	{latest} is out, but Atelier Gate can't install it over this copy.	{latest} ya está disponible, pero Atelier Gate no puede instalarla sobre esta copia.
+	Atelier Gate can't install version {version} over this copy.	Atelier Gate no puede instalar la versión {version} sobre esta copia.
 	Download for {os}	Descargar para {os}
 	Download	Descargar
 	Coming soon	Próximamente
@@ -72,6 +76,13 @@
 	Show in Files	Mostrar en Archivos
 	Reinstall	Reinstalar
 	Uninstall…	Desinstalar…
+	Launch options…	Opciones de inicio…
+	{name} launch options	Opciones de inicio de {name}
+	Flags added each time the app is opened	Parámetros que se añaden cada vez que se abre la aplicación
+	Separate flags with spaces. Quote a value that has spaces in it.	Separa los parámetros con espacios. Pon entre comillas un valor que contenga espacios.
+	A quote isn't closed.	Hay unas comillas sin cerrar.
+	{name} wasn't opened: a quote in its launch options isn't closed.	{name} no se abrió: hay unas comillas sin cerrar en sus opciones de inicio.
+	Save	Guardar
 	All releases	Todas las versiones
 	Atelier Gate {version} is available.	Atelier Gate {version} está disponible.
 	Dismiss	Descartar
@@ -87,6 +98,7 @@
 	Atelier Gate {version}	Atelier Gate {version}
 	Only when I ask	Solo cuando lo pida
 	Automatically download and install updates	Descargar e instalar actualizaciones automáticamente
+	Ask for permission once when updating all apps	Pedir permiso una sola vez al actualizar todas las aplicaciones
 	Notify me when an installed app has an update	Avisarme cuando una aplicación instalada tenga una actualización
 	Include pre-releases (betas and release candidates)	Incluir versiones preliminares (betas y versiones candidatas)
 	Installing on Linux	Instalación en Linux
@@ -156,6 +168,10 @@
 	Retry update to {version}	Reintentar la actualización a {version}
 	The download is still here. It's checked again, then installed.	La descarga sigue aquí. Se vuelve a comprobar y luego se instala.
 	Waiting for another app…	Esperando a otra aplicación…
+	Waiting for another download…	Esperando a otra descarga…
+	Simultaneous downloads	Descargas simultáneas
+	No limit	Sin límite
+	Downloads running together share your connection, so each one is slower.	Las descargas simultáneas comparten tu conexión, así que cada una es más lenta.
 	Waiting for other installs…	Esperando a otras instalaciones…
 	Installer (.msi)	Instalador (.msi)
 	Portable (.zip)	Portátil (.zip)
@@ -282,6 +298,7 @@ filter	Installed	Instaladas
 @plural	{n} h ago|{n} h ago	hace {n} h|hace {n} h
 @plural	{n} day ago|{n} days ago	hace {n} día|hace {n} días
 @msg	Couldn't open {name}: {e}	No se pudo abrir {name}: {e}
+@msg	Atelier Gate couldn't start its window on {backend}: {e}	No se pudo iniciar la ventana de Atelier Gate con {backend}: {e}
 @msg	Download cancelled	Descarga cancelada
 @msg	{name} updated to {version}	{name} actualizada a {version}
 @msg	{name} installed: {version}	{name} instalada: {version}
@@ -340,6 +357,8 @@ filter	Installed	Instaladas
 	Visit aetherionnnation.com	Visitar aetherionnnation.com
 	Atelier on GitHub	Atelier en GitHub
 @plural	Atelier Gate · {n} update available|Atelier Gate · {n} updates available	Atelier Gate · {n} actualización disponible|Atelier Gate · {n} actualizaciones disponibles
+
+	Download size: {size}	Tamaño de descarga: {size}
 	Install folder	Carpeta de instalación
 	Default install folder	Carpeta de instalación predeterminada
 	System default	Predeterminada del sistema
@@ -384,3 +403,27 @@ column	Author	Autor
 	Migrate Flatpak bundles to ArtCraft OCI (experimental)	Migrar paquetes Flatpak a ArtCraft OCI (experimental)
 	On update, switch first party apps when the matching package is available. Otherwise, keep using bundles.	Al actualizar, migrar las aplicaciones de ArtCraft si está disponible el paquete correspondiente. De lo contrario, seguir usando paquetes independientes.
 	The OCI repository is a preview with GPG verification disabled.	El repositorio OCI es una versión preliminar con la verificación GPG desactivada.
+	Version pinned to {version}. Click to unlock.	Versión fijada en {version}. Haz clic para desbloquear.
+	Unlock version?	¿Desbloquear la versión?
+	{app} is pinned to {version}. Follow the latest release instead?	{app} está fijado en la versión {version}. ¿Usar la versión más reciente?
+	Unlock	Desbloquear
+
+	AI agents	Agentes de IA
+	While this is on, AI apps that use MCP, such as Claude, Cursor or LM Studio, can work with every installed Atelier app through one entry. While it is off, no agent can reach them, and the entries added here are removed.	Mientras esto esté activado, las apps de IA que usan MCP, como Claude, Cursor o LM Studio, pueden trabajar con todas las apps Atelier instaladas mediante una sola entrada. Si está desactivado, ningún agente puede llegar a ellas y se quitan las entradas añadidas aquí.
+	Quick install	Instalación rápida
+	Adds the Atelier apps to that client. Restart the client afterwards.	Añade las apps Atelier a ese cliente. Reinicia el cliente después.
+	Other clients	Otros clientes
+	Copy the configuration and paste it into the client's MCP settings.	Copia la configuración y pégala en los ajustes de MCP del cliente.
+	Copy JSON	Copiar JSON
+	Copy for VS Code	Copiar para VS Code
+	Copy for Codex (TOML)	Copiar para Codex (TOML)
+	Configuration copied.	Configuración copiada.
+	{client} loads its MCP servers only when it starts, so the Atelier apps appear after a restart. Restarting closes {client}, including a reply it is still writing.	{client} solo carga sus servidores MCP al iniciarse, así que las apps Atelier aparecen después de reiniciarlo. Al reiniciar se cierra {client}, incluida una respuesta que esté escribiendo.
+	Restart {client}	Reiniciar {client}
+	Restarting {client}…	Reiniciando {client}…
+	The Atelier gateway (craft-ai-mcp) is not installed beside the launcher.	La pasarela Atelier (craft-ai-mcp) no está instalada junto al lanzador.
+	Let AI agents use Atelier apps	Permitir que los agentes de IA usen las apps Atelier
+	Apps agents can reach: {count}	Apps que los agentes pueden usar: {count}
+	Added	Añadida
+	Remove	Quitar
+	Add	Añadir

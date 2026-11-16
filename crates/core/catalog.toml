@@ -1,0 +1,741 @@
+# Atelier Gate's catalog: the twelve Atelier apps, compiled in by build.rs (SUITE and DETAILS).
+# Adapted from ArtCraft Launcher's catalog (storytold/craft-launcher, crates/core/catalog.toml),
+# keeping its schema so upstream syncs merge: same app ids, colours, bundle ids and package names
+# (machine names), with the Atelier names, the Nation's repos and publisher, and no macOS team
+# (the Atelier apps are unsigned for now). `product` and `upstream_name` are Gate's own fields.
+#
+# Gate fetches no hosted catalog (`hosted_catalog::ENABLED` is false). The `icon_url`,
+# `icon_sha256`, `desktop_categories` and `startup_wm_class` keys only keep upstream's hosted-catalog
+# schema (and its tests) whole; `icon_sha256` is the hash of Gate's own icon in assets/app-icons.
+
+[[apps]]
+color = [47, 123, 245]
+former_bundles = []
+former_ids = []
+former_names = []
+id = "photocraft"
+binary = "photocraft"
+flatpak_id = "ai.storyteller.photocraft"
+mac_bundle_id = "ai.storyteller.photocraft"
+mac_bundle_name = "Atelier Pigment"
+website = "https://www.aetherionnnation.com/atelier/pigment"
+deb_package = "photocraft"
+rpm_package = "photocraft"
+desktop_categories = ["Graphics", "2DGraphics", "RasterGraphics", "Photography"]
+startup_wm_class = "photocraft"
+icon_url = "https://getartcraft.com/launcher-app-icons/photocraft-d0c1769735c94f788155be394f6f6bd6fd1ad3745f0c386bc8b45121e9b7bd41.png"
+icon_sha256 = "d0c1769735c94f788155be394f6f6bd6fd1ad3745f0c386bc8b45121e9b7bd41"
+ink_dark = [127, 176, 255]
+ink_light = [26, 91, 196]
+kind = "official"
+name = "Pigment"
+product = "Atelier Pigment"
+upstream_name = "PhotoCraft"
+publisher = "Aetherion Nation"
+repo = "Aetherion-Nation-Builders/atelier-pigment"
+tagline = "Image editing"
+[apps.details]
+headline = "The image editor you already know how to use."
+about = "Layers, masks, adjustment layers, layer styles, type, vectors and brushes in a native app written in Rust. Open source, offline, and yours.\n\nPigment keeps the menus, shortcuts and panels your hands already know, so there is nothing to relearn."
+platforms = "macOS, Windows, Linux, FreeBSD, web"
+[[apps.details.features]]
+text = "No Electron and no web view: a fast native compositor."
+title = "Native GPU canvas"
+[[apps.details.features]]
+text = "Opens and saves layered PSD and PSB documents."
+title = "Real layered files"
+[[apps.details.features]]
+text = "Adjustment layers, live-preview filters, smart objects and layer styles."
+title = "Non-destructive editing"
+[[apps.details.features]]
+text = "Subject and object selection and mask refinement run locally."
+title = "On-device selection"
+[[apps.details.features]]
+text = "8-, 16- and 32-bit RGB, CMYK, Lab and Grayscale, with ICC color management and soft proofing."
+title = "Serious color"
+[[apps.details.shots]]
+caption = "Curves and type layers"
+key = "demo"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/photocraft/demo.jpg"
+[[apps.details.shots]]
+caption = "Levels with a live histogram"
+key = "adjustments"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/photocraft/adjustments.jpg"
+[[apps.details.shots]]
+caption = "Layer styles on live type"
+key = "layer-styles"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/photocraft/layer-styles.jpg"
+[[apps.details.shots]]
+caption = "Selections and masked adjustments"
+key = "masks"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/photocraft/masks.jpg"
+
+[[apps]]
+color = [232, 87, 63]
+former_bundles = []
+former_ids = []
+former_names = []
+id = "vectorcraft"
+binary = "vectorcraft"
+flatpak_id = "ai.storyteller.vectorcraft"
+mac_bundle_id = "ai.storyteller.vectorcraft"
+mac_bundle_name = "Atelier Quill"
+website = "https://www.aetherionnnation.com/atelier/quill"
+deb_package = "vectorcraft"
+rpm_package = "vectorcraft"
+desktop_categories = ["Graphics", "2DGraphics", "VectorGraphics"]
+startup_wm_class = "ai.storyteller.vectorcraft"
+icon_url = "https://getartcraft.com/launcher-app-icons/vectorcraft-d6c83ce318a405a0b0acf195deeb9185cba9e6b23ab2b75a3360e88a5ae6f10b.png"
+icon_sha256 = "d6c83ce318a405a0b0acf195deeb9185cba9e6b23ab2b75a3360e88a5ae6f10b"
+ink_dark = [255, 138, 112]
+ink_light = [184, 58, 36]
+kind = "official"
+name = "Quill"
+product = "Atelier Quill"
+upstream_name = "VectorCraft"
+publisher = "Aetherion Nation"
+repo = "Aetherion-Nation-Builders/atelier-quill"
+tagline = "Vector illustration"
+[apps.details]
+headline = "Vector illustration, with familiar tools and editable effects."
+about = "A native vector illustration app with the pen, panels and shortcuts illustrators expect. Open source, and it also runs in a browser."
+platforms = "macOS, Windows, Linux, FreeBSD, web"
+[[apps.details.features]]
+text = "Pen, direct selection, shape booleans, snapping guides and an appearance panel, laid out the way you expect."
+title = "The workflow you know"
+[[apps.details.features]]
+text = "Drawings with thousands of shapes stay responsive on a retina display."
+title = "Genuinely fast"
+[[apps.details.features]]
+text = "Shape booleans work on the exact curves, so there is no \"cannot perform operation\", and undo is unlimited."
+title = "Booleans that don't fail"
+[[apps.details.features]]
+text = "Blends, envelope distort, gradient mesh, repeats, glows and drop shadows all stay editable."
+title = "Live, editable effects"
+[[apps.details.features]]
+text = "Turn raster images into clean vector paths, with presets for the common cases."
+title = "Image tracing"
+[[apps.details.features]]
+text = "Native JSON documents, SVG and PDF import and export, and PNG, JPEG and WebP output."
+title = "Open formats"
+[[apps.details.shots]]
+caption = "The Neon Drive poster"
+key = "neon"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/vectorcraft/neon.jpg"
+[[apps.details.shots]]
+caption = "Live blends"
+key = "ribbons"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/vectorcraft/ribbons.jpg"
+[[apps.details.shots]]
+caption = "A feature sheet and the Layers panel"
+key = "sheet"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/vectorcraft/sheet.jpg"
+[[apps.details.shots]]
+caption = "Pathfinder and exact booleans"
+key = "bezier"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/vectorcraft/bezier.jpg"
+
+[[apps]]
+color = [139, 92, 246]
+former_bundles = []
+former_ids = []
+former_names = []
+id = "filmcraft"
+binary = "filmcraft"
+flatpak_id = "ai.storyteller.filmcraft"
+mac_bundle_id = "ai.storyteller.filmcraft"
+mac_bundle_name = "Atelier Reel"
+website = "https://www.aetherionnnation.com/atelier/reel"
+deb_package = "filmcraft"
+rpm_package = "filmcraft"
+desktop_categories = ["AudioVideo", "Video", "AudioVideoEditing"]
+startup_wm_class = "ai.storyteller.filmcraft"
+icon_url = "https://getartcraft.com/launcher-app-icons/filmcraft-6c6cb59e770c6c2dcae041fed9d0ea5330539ace0260ea051263870941da252b.png"
+icon_sha256 = "6c6cb59e770c6c2dcae041fed9d0ea5330539ace0260ea051263870941da252b"
+ink_dark = [182, 156, 255]
+ink_light = [106, 63, 214]
+kind = "official"
+name = "Reel"
+product = "Atelier Reel"
+upstream_name = "FilmCraft"
+publisher = "Aetherion Nation"
+repo = "Aetherion-Nation-Builders/atelier-reel"
+tagline = "Video editing, color and sound"
+[apps.details]
+headline = "Professional video editing, rebuilt from scratch."
+about = "A native video editor with source and program monitors, a real timeline and every trim mode."
+platforms = "macOS, Windows, Linux, FreeBSD, web"
+[[apps.details.features]]
+text = "Source and program monitors, three-point editing, every trim mode and J/K/L trimming."
+title = "A timeline you already know"
+[[apps.details.features]]
+text = "An integer timebase keeps 23.976 and 29.97 drop-frame footage exact, with no drift."
+title = "Frame-exact time"
+[[apps.details.features]]
+text = "No FFmpeg inside: native support for H.264, HEVC, ProRes, VP9, AAC and Opus."
+title = "Its own codecs"
+[[apps.details.features]]
+text = "Curves, color wheels, HSL secondaries, LUTs and HDR and log workflows, with scopes to check the result."
+title = "Color grading"
+[[apps.details.features]]
+text = "Video effects and transitions, keyframes with value and velocity graphs, and a linear-light GPU compositor."
+title = "Effects and keyframes"
+[[apps.details.features]]
+text = "EBU R128 loudness meters, a mixer with automation and native audio effects."
+title = "Broadcast-ready audio"
+[[apps.details.shots]]
+caption = "The Color workspace, with scopes"
+key = "color"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/filmcraft/color.jpg"
+[[apps.details.shots]]
+caption = "The Assembly workspace"
+key = "assembly"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/filmcraft/assembly.jpg"
+[[apps.details.shots]]
+caption = "Keyframes in Effect Controls"
+key = "keyframes"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/filmcraft/keyframes.jpg"
+
+[[apps]]
+color = [242, 165, 22]
+former_bundles = []
+former_ids = []
+former_names = []
+id = "lightcraft"
+binary = "lightcraft"
+flatpak_id = "ai.storyteller.lightcraft"
+mac_bundle_id = "ai.storyteller.lightcraft"
+mac_bundle_name = "Atelier Lens"
+website = "https://www.aetherionnnation.com/atelier/lens"
+deb_package = "lightcraft"
+rpm_package = "lightcraft"
+desktop_categories = ["Graphics", "2DGraphics", "RasterGraphics", "Photography"]
+startup_wm_class = "ai.storyteller.lightcraft"
+icon_url = "https://getartcraft.com/launcher-app-icons/lightcraft-798fac574f884d251541cf55fb02f17b09c4aea01e74787e651b11669a245fc9.png"
+icon_sha256 = "798fac574f884d251541cf55fb02f17b09c4aea01e74787e651b11669a245fc9"
+ink_dark = [255, 193, 77]
+ink_light = [138, 88, 0]
+kind = "official"
+name = "Lens"
+product = "Atelier Lens"
+upstream_name = "LightCraft"
+publisher = "Aetherion Nation"
+repo = "Aetherion-Nation-Builders/atelier-lens"
+tagline = "Photo library and raw development"
+[apps.details]
+headline = "Your photos. Your pixels. Your machine."
+about = "A fast photo library and non-destructive raw developer. No account, no cloud, no telemetry and no subscription."
+platforms = "macOS, Windows, Linux, FreeBSD, web"
+[[apps.details.features]]
+text = "A wide-gamut, 32-bit float pipeline that never touches your originals."
+title = "Non-destructive by design"
+[[apps.details.features]]
+text = "Light, color, effects, tone curve, a color mixer, color grading wheels and built-in presets."
+title = "Every control you reach for"
+[[apps.details.features]]
+text = "Brush, gradient and range masks, plus sky, subject and background masks."
+title = "Precise masking"
+[[apps.details.features]]
+text = "Support for the main camera raw formats: DNG, CR2, ARW, NEF, RAF, RW2, PEF and ORF."
+title = "Native raw decoding"
+[[apps.details.features]]
+text = "Albums, ratings, flags and search, with grids that stay smooth on large catalogs."
+title = "A library that keeps up"
+[[apps.details.features]]
+text = "The GPU pipeline updates the preview as you move a slider, even on large raw files."
+title = "Instant feedback"
+[[apps.details.shots]]
+caption = "The Edit view"
+key = "hero"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/lightcraft/hero.jpg"
+[[apps.details.shots]]
+caption = "The tone curve"
+key = "curve"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/lightcraft/curve.jpg"
+[[apps.details.shots]]
+caption = "Color grading wheels"
+key = "grading"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/lightcraft/grading.jpg"
+[[apps.details.shots]]
+caption = "A radial mask over a sky mask"
+key = "masking"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/lightcraft/masking.jpg"
+
+[[apps]]
+color = [232, 32, 79]
+former_bundles = []
+former_ids = ["printcraft"]
+former_names = ["PrintCraft"]
+id = "pdfcraft"
+binary = "pdfcraft"
+flatpak_id = "ai.storyteller.pdfcraft"
+mac_bundle_id = "ai.storyteller.pdfcraft"
+mac_bundle_name = "Atelier Seal"
+website = "https://www.aetherionnnation.com/atelier/seal"
+deb_package = "pdfcraft"
+rpm_package = "pdfcraft"
+desktop_categories = ["Office", "Viewer"]
+startup_wm_class = "pdfcraft"
+icon_url = "https://getartcraft.com/launcher-app-icons/pdfcraft-ece535151c3b28a0e42b8879c3545092ac06ac25f828fa32b63883b3697e1551.png"
+icon_sha256 = "ece535151c3b28a0e42b8879c3545092ac06ac25f828fa32b63883b3697e1551"
+ink_dark = [242, 58, 98]
+ink_light = [183, 2, 40]
+kind = "official"
+name = "Seal"
+product = "Atelier Seal"
+upstream_name = "PdfCraft"
+publisher = "Aetherion Nation"
+repo = "Aetherion-Nation-Builders/atelier-seal"
+tagline = "Reading, organizing and protecting PDFs"
+[apps.details]
+headline = "The open-source PDF workbench."
+about = "Read, organize, combine, split and secure PDFs in a fast, native app. No account, no telemetry and no cloud."
+platforms = "macOS, Windows, Linux, FreeBSD, web"
+[[apps.details.features]]
+text = "World scripts, vertical Japanese, color emoji and transparency."
+title = "Faithful rendering"
+[[apps.details.features]]
+text = "Instant find, and text selection that follows the document's real reading order."
+title = "Search as you type"
+[[apps.details.features]]
+text = "Rotate, delete, insert and reorder pages, with deep undo behind every change."
+title = "Organize like cards"
+[[apps.details.features]]
+text = "Assemble and break apart documents while keeping links, form fields, layers and bookmarks intact."
+title = "Combine, extract, split"
+[[apps.details.features]]
+text = "Incremental, atomic saves with autosave and crash recovery."
+title = "Fearless saves"
+[[apps.details.features]]
+text = "Opens files from RC4 to AES-256 encryption and honors the author's permissions."
+title = "Built-in security"
+
+[[apps]]
+color = [224, 54, 143]
+former_bundles = []
+former_ids = []
+former_names = []
+id = "effectcraft"
+binary = "effectcraft"
+flatpak_id = "ai.storyteller.effectcraft"
+mac_bundle_id = "ai.storyteller.effectcraft"
+mac_bundle_name = "Atelier Prism"
+website = "https://www.aetherionnnation.com/atelier/prism"
+deb_package = "effectcraft"
+rpm_package = "effectcraft"
+desktop_categories = ["AudioVideo", "Video", "Graphics", "2DGraphics"]
+startup_wm_class = "ai.storyteller.effectcraft"
+icon_url = "https://getartcraft.com/launcher-app-icons/effectcraft-a5ab1fe0777b8dd3c7409e6600324adcdac06e600d46da435231a9558b362786.png"
+icon_sha256 = "a5ab1fe0777b8dd3c7409e6600324adcdac06e600d46da435231a9558b362786"
+ink_dark = [255, 122, 184]
+ink_light = [176, 32, 108]
+kind = "official"
+name = "Prism"
+product = "Atelier Prism"
+upstream_name = "EffectCraft"
+publisher = "Aetherion Nation"
+repo = "Aetherion-Nation-Builders/atelier-prism"
+tagline = "Motion graphics and visual effects"
+[apps.details]
+headline = "Motion graphics and visual effects."
+about = "A native compositor with compositions, layers, keyframes, effects, expressions, 3D cameras and lights, and a render queue. Young, moving fast, and already usable."
+platforms = "macOS, Windows, Linux, FreeBSD, web"
+[[apps.details.features]]
+text = "Familiar panels and keyframes (linear, bezier, hold and eased), with a graph editor for value and speed curves."
+title = "Animate the way you know"
+[[apps.details.features]]
+text = "Solids, shapes, text, footage, nested compositions, nulls and adjustment layers, with parenting, track mattes and blend modes."
+title = "Layers of every kind"
+[[apps.details.features]]
+text = "Blur, color correction, distortion, generators, keying, particles and simulation, stylize and time effects."
+title = "A large effects library"
+[[apps.details.features]]
+text = "3D layers with cameras, depth of field, and lights that cast soft ray-traced shadows."
+title = "Real 3D"
+[[apps.details.features]]
+text = "JavaScript expressions with wiggle, loops and layer references, edited inline."
+title = "Expressions"
+[[apps.details.features]]
+text = "H.264 and ProRes with alpha, PNG, TIFF and EXR sequences, GIF, and Lottie import and export."
+title = "Export anywhere"
+[[apps.details.shots]]
+caption = "An animated composition"
+key = "hero"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/effectcraft/hero.jpg"
+[[apps.details.shots]]
+caption = "The Graph Editor"
+key = "graph"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/effectcraft/graph.jpg"
+[[apps.details.shots]]
+caption = "Particles and Effect Controls"
+key = "effects"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/effectcraft/effects.jpg"
+[[apps.details.shots]]
+caption = "3D layers with cameras and lights"
+key = "3d"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/effectcraft/3d.jpg"
+
+[[apps]]
+color = [123, 181, 28]
+former_bundles = []
+former_ids = []
+former_names = []
+id = "designcraft"
+binary = "designcraft"
+flatpak_id = "ai.storyteller.designcraft"
+mac_bundle_id = "ai.storyteller.designcraft"
+mac_bundle_name = "Atelier Press"
+website = "https://www.aetherionnnation.com/atelier/press"
+deb_package = "designcraft"
+rpm_package = "designcraft"
+desktop_categories = ["Graphics", "Publishing"]
+startup_wm_class = "ai.storyteller.designcraft"
+icon_url = "https://getartcraft.com/launcher-app-icons/designcraft-63d15381d3df1336b7492a9cc44f9aa1d428621774549a423aca8328d7a537d0.png"
+icon_sha256 = "63d15381d3df1336b7492a9cc44f9aa1d428621774549a423aca8328d7a537d0"
+ink_dark = [166, 224, 74]
+ink_light = [69, 112, 8]
+kind = "official"
+name = "Press"
+product = "Atelier Press"
+upstream_name = "DesignCraft"
+publisher = "Aetherion Nation"
+repo = "Aetherion-Nation-Builders/atelier-press"
+tagline = "Page layout and publishing"
+[apps.details]
+headline = "Page layout and publishing."
+about = "A native layout app with spreads, parent pages, threaded stories, styles, swatches, text wrap and a paragraph composer. No subscription, no license server and no telemetry."
+platforms = "macOS, Windows, Linux, FreeBSD, web"
+[[apps.details.features]]
+text = "Spreads and parent pages, frames and threaded stories, with paragraph and character styles."
+title = "The layout tools you know"
+[[apps.details.features]]
+text = "A Knuth–Plass paragraph composer, dictionary hyphenation, optical margin alignment and baseline grids, with line breaks that match on screen and in PDF."
+title = "Beautiful type"
+[[apps.details.features]]
+text = "Real selectable text with embedded fonts, CMYK and spot colors, bleed, crop marks and PDF/A output."
+title = "Print-ready PDF"
+[[apps.details.features]]
+text = "Multithreaded rendering, instant undo and cached text composition."
+title = "Fast"
+[[apps.details.features]]
+text = "A documented native format, PNG export and layout interchange import and export."
+title = "Open formats"
+[[apps.details.features]]
+text = "Every menu item, tool, panel and dialog can be driven over a JSON control channel and an MCP server."
+title = "Built for automation"
+[[apps.details.shots]]
+caption = "A magazine spread with a threaded story"
+key = "spread"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/designcraft/spread.jpg"
+
+[[apps]]
+color = [31, 165, 201]
+former_bundles = []
+former_ids = []
+former_names = []
+id = "soundcraft"
+binary = "soundcraft"
+flatpak_id = "ai.storyteller.soundcraft"
+mac_bundle_id = "ai.storyteller.soundcraft"
+mac_bundle_name = "Atelier Frequency"
+website = "https://www.aetherionnnation.com/atelier/frequency"
+deb_package = "soundcraft"
+rpm_package = "soundcraft"
+desktop_categories = ["AudioVideo", "Audio", "Midi", "Mixer", "Sequencer", "Recorder"]
+startup_wm_class = "ai.storyteller.soundcraft"
+icon_url = "https://getartcraft.com/launcher-app-icons/soundcraft-19de4ea08d75d605a083d5b5e9123575472c385a6eb090863f5de6653bebdfbb.png"
+icon_sha256 = "19de4ea08d75d605a083d5b5e9123575472c385a6eb090863f5de6653bebdfbb"
+ink_dark = [95, 208, 238]
+ink_light = [14, 114, 144]
+kind = "official"
+name = "Frequency"
+product = "Atelier Frequency"
+upstream_name = "SoundCraft"
+publisher = "Aetherion Nation"
+repo = "Aetherion-Nation-Builders/atelier-frequency"
+tagline = "Recording, editing and mixing audio"
+[apps.details]
+headline = "Record, edit and mix your audio."
+about = "A digital audio workstation that follows the workflow audio engineers already know: an Edit window for arranging and editing, and a Mix window for balancing. Pre-alpha."
+platforms = "macOS, Windows, Linux, FreeBSD, web"
+[[apps.details.features]]
+text = "Shuffle, Slip, Spot and Grid modes, Smart, Grabber, Trim and other tools, fades and crossfades, playlists with comping lanes and clip gain."
+title = "Editing"
+[[apps.details.features]]
+text = "Faders and pans with automation, sends, busses, aux inputs, VCA masters, routing folders and automatic plugin delay compensation."
+title = "Mixing"
+[[apps.details.features]]
+text = "Volume, pan, mute, send and every plugin parameter, with Write, Touch, Latch and Trim passes recorded live from the faders."
+title = "Automation"
+[[apps.details.features]]
+text = "EQ, dynamics, reverbs, modulation effects, a subtractive synth and a drum synth, all original, and CLAP plugins load too."
+title = "Plugins"
+[[apps.details.shots]]
+caption = "The Edit window with a nine-track session"
+key = "edit"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/soundcraft/edit.jpg"
+[[apps.details.shots]]
+caption = "The Mix window"
+key = "mix"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/soundcraft/mix.jpg"
+[[apps.details.shots]]
+caption = "Automation and memory locations"
+key = "automation"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/soundcraft/automation.jpg"
+[[apps.details.shots]]
+caption = "The Score Editor"
+key = "score"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/soundcraft/score.jpg"
+
+[[apps]]
+color = [63, 95, 224]
+former_bundles = []
+former_ids = []
+former_names = []
+id = "wordcraft"
+binary = "wordcraft"
+flatpak_id = "ai.storyteller.wordcraft"
+mac_bundle_id = "ai.storyteller.wordcraft"
+mac_bundle_name = "Atelier Scribe"
+website = "https://www.aetherionnnation.com/atelier/scribe"
+deb_package = "wordcraft"
+rpm_package = "wordcraft"
+desktop_categories = ["Office", "WordProcessor"]
+startup_wm_class = "ai.storyteller.wordcraft"
+icon_url = "https://getartcraft.com/launcher-app-icons/wordcraft-0912eddb0c5060588e259a25632eefcd063195cc7b55305fefa086c77b0629fa.png"
+icon_sha256 = "0912eddb0c5060588e259a25632eefcd063195cc7b55305fefa086c77b0629fa"
+ink_dark = [142, 162, 255]
+ink_light = [42, 68, 184]
+kind = "official"
+name = "Scribe"
+product = "Atelier Scribe"
+upstream_name = "WordCraft"
+publisher = "Aetherion Nation"
+repo = "Aetherion-Nation-Builders/atelier-scribe"
+tagline = "Writing and document design"
+[apps.details]
+headline = "The familiar word processor, native and offline."
+about = "A word processor with the ribbon, shortcuts and behavior you already know. Open source, and built from public specifications."
+platforms = "macOS, Windows, Linux, BSD, web"
+[[apps.details.features]]
+text = "Ribbon tabs and groups, a live Styles gallery and the editing behavior you expect, from list continuation to Format Painter."
+title = "Familiar"
+[[apps.details.features]]
+text = "Opens and saves .docx, and also .odt, .rtf, .html, .md, .tex and .txt. Opens older .doc files and exports PDF with real, selectable text."
+title = "Your files"
+[[apps.details.features]]
+text = "Paragraph layout is cached, so typing stays responsive even in long documents."
+title = "Fast"
+[[apps.details.features]]
+text = "Spelling, grammar and everything else work offline."
+title = "Private"
+[[apps.details.features]]
+text = "Work on macOS, Windows, Linux, BSD and the web."
+title = "Everywhere"
+[[apps.details.features]]
+text = "Every action is a command, driven from the ribbon, shortcuts, a command-line tool, a JSON control channel or an MCP server."
+title = "Built for agents"
+[[apps.details.shots]]
+caption = "The Home tab and the Navigation pane"
+key = "hero"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/wordcraft/hero.jpg"
+[[apps.details.shots]]
+caption = "Track Changes and comments"
+key = "review"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/wordcraft/review.jpg"
+[[apps.details.shots]]
+caption = "The Design tab"
+key = "design"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/wordcraft/design.jpg"
+[[apps.details.shots]]
+caption = "The Layout tab"
+key = "layout"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/wordcraft/layout.jpg"
+
+[[apps]]
+color = [240, 122, 30]
+former_bundles = []
+former_ids = []
+former_names = []
+id = "deckcraft"
+binary = "deckcraft"
+flatpak_id = "ai.storyteller.deckcraft"
+mac_bundle_id = "ai.storyteller.deckcraft"
+mac_bundle_name = "Atelier Podium"
+website = "https://www.aetherionnnation.com/atelier/podium"
+deb_package = "deckcraft"
+rpm_package = "deckcraft"
+desktop_categories = ["Office", "Presentation"]
+startup_wm_class = "ai.storyteller.deckcraft"
+icon_url = "https://getartcraft.com/launcher-app-icons/deckcraft-38ae50057080950d9835064f8762c8f5a38e71a668bfe1fb52127c388afc12a2.png"
+icon_sha256 = "38ae50057080950d9835064f8762c8f5a38e71a668bfe1fb52127c388afc12a2"
+ink_dark = [255, 160, 96]
+ink_light = [168, 79, 10]
+kind = "official"
+name = "Podium"
+product = "Atelier Podium"
+upstream_name = "DeckCraft"
+publisher = "Aetherion Nation"
+repo = "Aetherion-Nation-Builders/atelier-podium"
+tagline = "Presentations and slide shows"
+[apps.details]
+headline = "Create slides, tell stories and present."
+about = "A presentation app with slide masters, shapes, animations and a presenter view. In alpha, heading for beta."
+platforms = "macOS, Windows, Linux, BSD, web"
+[[apps.details.features]]
+text = "Slide masters and layouts with placeholders that inherit formatting, themes, sections, notes and comments."
+title = "Make decks"
+[[apps.details.features]]
+text = "Preset shapes with adjust handles, connectors that stay glued to shapes, freeform tools, merged shapes, gradients, shadows and glow."
+title = "Draw"
+[[apps.details.features]]
+text = "In-place text editing with full font and paragraph formatting, bullets and numbering, columns and autofit."
+title = "Write"
+[[apps.details.features]]
+text = "Pictures with crop and corrections, styled tables, charts, audio and video."
+title = "Add content"
+[[apps.details.features]]
+text = "Transitions including Morph, animations and motion paths, a full-screen slide show, presenter view and rehearsed timings."
+title = "Present"
+[[apps.details.features]]
+text = "Opens and saves .pptx presentation files and exports PDF (slides, notes pages and handouts), PNG and JPEG."
+title = "Exchange files"
+[[apps.details.shots]]
+caption = "Editing a slide, with sections and notes"
+key = "editor"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/deckcraft/editor.jpg"
+[[apps.details.shots]]
+caption = "The Shape Format tab"
+key = "shape"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/deckcraft/shape.jpg"
+[[apps.details.shots]]
+caption = "The slide sorter"
+key = "sorter"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/deckcraft/sorter.jpg"
+[[apps.details.shots]]
+caption = "The Format Shape pane"
+key = "format"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/deckcraft/format.jpg"
+
+[[apps]]
+color = [62, 166, 232]
+former_bundles = []
+former_ids = []
+former_names = []
+id = "cadcraft"
+binary = "cadcraft"
+flatpak_id = "ai.storyteller.cadcraft"
+mac_bundle_id = "ai.storyteller.cadcraft"
+mac_bundle_name = "Atelier Blueprint"
+website = "https://www.aetherionnnation.com/atelier/blueprint"
+deb_package = "cadcraft"
+rpm_package = "cadcraft"
+desktop_categories = ["Graphics", "Engineering", "VectorGraphics"]
+startup_wm_class = "ai.storyteller.cadcraft"
+icon_url = "https://getartcraft.com/launcher-app-icons/cadcraft-2d471b59ea812eb18cf9592eac7d3f5703e25024c8b87c941ed820dcccce0496.png"
+icon_sha256 = "2d471b59ea812eb18cf9592eac7d3f5703e25024c8b87c941ed820dcccce0496"
+ink_dark = [124, 200, 255]
+ink_light = [26, 111, 168]
+kind = "official"
+name = "Blueprint"
+product = "Atelier Blueprint"
+upstream_name = "CADCraft"
+publisher = "Aetherion Nation"
+repo = "Aetherion-Nation-Builders/atelier-blueprint"
+tagline = "Computer-aided design and drafting"
+[apps.details]
+headline = "Computer-aided drafting, with a familiar workflow."
+about = "A drafting app with the command line, object snaps and workflow that drafters already know. Free, with no account and no subscription. In early, fast development."
+platforms = "macOS, Windows, Linux, FreeBSD, web"
+[[apps.details.features]]
+text = "Type L, click two points, type @5<45 and press Enter. Prompts with clickable keywords, polar tracking, direct distance entry and grips work the way drafting habit expects."
+title = "The workflow you know"
+[[apps.details.features]]
+text = "Reads and writes DXF natively (R12 through 2018) and opens and saves DWG (R13 through 2018). Exports SVG and PNG."
+title = "Open files"
+[[apps.details.features]]
+text = "A responsive, native drafting workspace."
+title = "Fast and native"
+[[apps.details.features]]
+text = "Draw, modify, dimension, hatch and block commands, layers with a properties manager, paper-space layouts and PDF plotting."
+title = "A full drafting toolset"
+[[apps.details.features]]
+text = "Every menu item, tool and prompt is a command, available over MCP, a JSON control channel or the CLI."
+title = "Built for agents"
+[[apps.details.shots]]
+caption = "An apartment floor plan"
+key = "apartment"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/cadcraft/apartment.jpg"
+[[apps.details.shots]]
+caption = "A mechanical bracket drawing"
+key = "bracket"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/cadcraft/bracket.jpg"
+[[apps.details.shots]]
+caption = "A layout sheet"
+key = "layout"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/cadcraft/layout.jpg"
+
+[[apps]]
+color = [31, 157, 85]
+former_bundles = []
+former_ids = []
+former_names = []
+id = "gridcraft"
+binary = "gridcraft"
+flatpak_id = "ai.storyteller.gridcraft"
+mac_bundle_id = "ai.storyteller.gridcraft"
+mac_bundle_name = "Atelier Ledger"
+website = "https://www.aetherionnnation.com/atelier/ledger"
+deb_package = "gridcraft"
+rpm_package = "gridcraft"
+desktop_categories = ["Office", "Spreadsheet"]
+startup_wm_class = "ai.storyteller.gridcraft"
+icon_url = "https://getartcraft.com/launcher-app-icons/gridcraft-39b80cf6f1015b22cfac181b99c0f7ec6ee177c88faf702edcae9d40520cabb6.png"
+icon_sha256 = "39b80cf6f1015b22cfac181b99c0f7ec6ee177c88faf702edcae9d40520cabb6"
+ink_dark = [79, 214, 138]
+ink_light = [18, 112, 58]
+kind = "official"
+name = "Ledger"
+product = "Atelier Ledger"
+upstream_name = "GridCraft"
+publisher = "Aetherion Nation"
+repo = "Aetherion-Nation-Builders/atelier-ledger"
+tagline = "Spreadsheets and data"
+[apps.details]
+headline = "Spreadsheets you already know how to use."
+about = "A spreadsheet with the ribbon, formula bar, sheet tabs and shortcuts you know. No subscription, no license server and no telemetry."
+platforms = "macOS, Windows, Linux, BSD, web"
+[[apps.details.features]]
+text = "The ribbon, formula bar, Name Box, fill handle, point-mode formulas, Format Cells, Paste Special, conditional formatting, tables and charts."
+title = "Familiar"
+[[apps.details.features]]
+text = "XLSX is the native format, with formulas, tables, conditional formats, charts, pivot tables and print settings round-tripping. CSV and TSV too."
+title = "Compatible"
+[[apps.details.features]]
+text = "A dependency-graph calculation engine with dynamic arrays, LET and LAMBDA, structured table references, sort, AutoFilter and Flash Fill."
+title = "Capable"
+[[apps.details.features]]
+text = "Copy-on-write workbooks, incremental recalculation and a grid that only lays out what is on screen."
+title = "Fast"
+[[apps.details.features]]
+text = "Every ribbon button, menu item, dialog and keystroke is a command, available over a JSON control channel, an MCP server or the CLI."
+title = "Agent-native"
+[[apps.details.features]]
+text = "Work on the desktop and the web."
+title = "Everywhere"
+[[apps.details.shots]]
+caption = "A quarterly sales dashboard"
+key = "hero"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/gridcraft/hero.jpg"
+[[apps.details.shots]]
+caption = "A household budget"
+key = "budget"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/gridcraft/budget.jpg"
+[[apps.details.shots]]
+caption = "A pivot table"
+key = "pivot"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/gridcraft/pivot.jpg"
+[[apps.details.shots]]
+caption = "Formatting a chart"
+key = "chart"
+url = "https://raw.githubusercontent.com/storytold/craft-launcher-assets/v1/gridcraft/chart.jpg"

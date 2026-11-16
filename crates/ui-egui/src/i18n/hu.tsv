@@ -49,6 +49,10 @@
 	Install	Telepítés
 	Update to {v}	Frissítés: {v}
 	Open	Megnyitás
+	Open {version}	{version} megnyitása
+	Open {installed} without updating. {latest} stays available.	{installed} megnyitása frissítés nélkül. A(z) {latest} továbbra is elérhető.
+	{latest} is out, but Atelier Gate can't install it over this copy.	Megjelent a(z) {latest}, de az Atelier Gate nem tudja ennek a példánynak a helyére telepíteni.
+	Atelier Gate can't install version {version} over this copy.	Az Atelier Gate nem tudja a(z) {version} verziót ennek a példánynak a helyére telepíteni.
 	Download for {os}	Letöltés {os} rendszerre
 	Download	Letöltés
 	Coming soon	Hamarosan
@@ -72,6 +76,13 @@
 	Show in Files	Megjelenítés a fájlkezelőben
 	Reinstall	Újratelepítés
 	Uninstall…	Eltávolítás…
+	Launch options…	Indítási beállítások…
+	{name} launch options	{name} indítási beállításai
+	Flags added each time the app is opened	Kapcsolók, amelyeket az alkalmazás minden megnyitásakor átad
+	Separate flags with spaces. Quote a value that has spaces in it.	A kapcsolókat szóközzel válassza el. A szóközt tartalmazó értéket tegye idézőjelbe.
+	A quote isn't closed.	Egy idézőjel nincs lezárva.
+	{name} wasn't opened: a quote in its launch options isn't closed.	A(z) {name} nem nyílt meg: az indítási beállításaiban egy idézőjel nincs lezárva.
+	Save	Mentés
 	All releases	Minden kiadás
 	Atelier Gate {version} is available.	Elérhető az Atelier Gate új verziója: {version}.
 	Dismiss	Elrejtés
@@ -87,6 +98,7 @@
 	Atelier Gate {version}	Atelier Gate {version}
 	Only when I ask	Csak kézi kereséskor
 	Automatically download and install updates	Frissítések automatikus letöltése és telepítése
+	Ask for permission once when updating all apps	Engedély kérése csak egyszer az összes alkalmazás frissítésekor
 	Notify me when an installed app has an update	Értesítés a telepített alkalmazásokhoz elérhető frissítésekről
 	Include pre-releases (betas and release candidates)	Előzetes kiadások engedélyezése (béta- és kiadásra jelölt verziók)
 	Installing on Linux	Telepítés Linuxon
@@ -157,6 +169,10 @@
 	Retry update to {version}	Frissítés újrapróbálása: {version}
 	The download is still here. It's checked again, then installed.	A letöltött fájl megmaradt. Újra ellenőrizzük, majd telepítjük.
 	Waiting for another app…	Várakozás egy másik alkalmazásra…
+	Waiting for another download…	Várakozás egy másik letöltésre…
+	Simultaneous downloads	Egyidejű letöltések
+	No limit	Korlátlan
+	Downloads running together share your connection, so each one is slower.	Az egyidejű letöltések megosztják a kapcsolatot, így mindegyik lassabb.
 	Waiting for other installs…	Várakozás a többi telepítésre…
 
 # Package formats offered for download (PackageKind::label)
@@ -297,6 +313,7 @@ filter	Installed	Telepítve
 
 # Message templates (@msg): toasts from the backend. {placeholders} match any text.
 @msg	Couldn't open {name}: {e}	{name} nem nyitható meg: {e}
+@msg	Atelier Gate couldn't start its window on {backend}: {e}	Nem sikerült elindítani az Atelier Gate ablakát ({backend}): {e}
 @msg	Download cancelled	Letöltés megszakítva
 @msg	{name} updated to {version}	{name} frissítve. Verzió: {version}
 @msg	{name} installed: {version}	{name} telepítve: {version}
@@ -360,6 +377,8 @@ filter	Installed	Telepítve
 	Visit aetherionnnation.com	aetherionnnation.com megnyitása
 	Atelier on GitHub	Atelier a GitHubon
 @plural	Atelier Gate · {n} update available|Atelier Gate · {n} updates available	Atelier Gate · {n} frissítés elérhető|Atelier Gate · {n} frissítés elérhető
+
+	Download size: {size}	Letöltési méret: {size}
 	Install folder	Telepítési mappa
 	Default install folder	Alapértelmezett telepítési mappa
 	System default	Rendszer alapértelmezése
@@ -404,3 +423,27 @@ column	Author	Szerző
 	Migrate Flatpak bundles to ArtCraft OCI (experimental)	Flatpak-csomagok átállítása ArtCraft OCI-ra (kísérleti)
 	On update, switch first party apps when the matching package is available. Otherwise, keep using bundles.	Frissítéskor állítsa át az ArtCraft alkalmazásait, ha elérhető a megfelelő csomag. Egyébként továbbra is önálló csomagokat használjon.
 	The OCI repository is a preview with GPG verification disabled.	Az OCI-tároló előzetes verzió, kikapcsolt GPG-ellenőrzéssel.
+	Version pinned to {version}. Click to unlock.	A verzió rögzítve: {version}. Kattintson a feloldáshoz.
+	Unlock version?	Feloldja a verzió zárolását?
+	{app} is pinned to {version}. Follow the latest release instead?	A(z) {app} a(z) {version} verzióra van rögzítve. Inkább a legújabb kiadást kövesse?
+	Unlock	Feloldás
+
+	AI agents	AI-ügynökök
+	While this is on, AI apps that use MCP, such as Claude, Cursor or LM Studio, can work with every installed Atelier app through one entry. While it is off, no agent can reach them, and the entries added here are removed.	Amíg ez be van kapcsolva, az MCP-t használó AI-alkalmazások, például a Claude, a Cursor vagy az LM Studio, egyetlen bejegyzésen át dolgozhatnak minden telepített Atelier alkalmazással. Kikapcsolva egyetlen ügynök sem éri el őket, és az itt hozzáadott bejegyzések törlődnek.
+	Quick install	Gyors telepítés
+	Adds the Atelier apps to that client. Restart the client afterwards.	Hozzáadja a Atelier alkalmazásokat ehhez a klienshez. Utána indítsa újra a klienst.
+	Other clients	Más kliensek
+	Copy the configuration and paste it into the client's MCP settings.	Másolja ki a konfigurációt, és illessze be a kliens MCP-beállításaiba.
+	Copy JSON	JSON másolása
+	Copy for VS Code	Másolás VS Code-hoz
+	Copy for Codex (TOML)	Másolás Codexhez (TOML)
+	Configuration copied.	Konfiguráció kimásolva.
+	{client} loads its MCP servers only when it starts, so the Atelier apps appear after a restart. Restarting closes {client}, including a reply it is still writing.	A(z) {client} csak induláskor tölti be az MCP-kiszolgálóit, ezért a Atelier alkalmazások újraindítás után jelennek meg. Az újraindítás bezárja a(z) {client} alkalmazást, a még íródó választ is.
+	Restart {client}	{client} újraindítása
+	Restarting {client}…	{client} újraindítása…
+	The Atelier gateway (craft-ai-mcp) is not installed beside the launcher.	A Atelier átjáró (craft-ai-mcp) nincs telepítve az indító mellé.
+	Let AI agents use Atelier apps	AI-ügynökök használhatják a Atelier alkalmazásokat
+	Apps agents can reach: {count}	Ügynökök által elérhető alkalmazások: {count}
+	Added	Hozzáadva
+	Remove	Eltávolítás
+	Add	Hozzáadás

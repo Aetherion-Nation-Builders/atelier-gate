@@ -47,6 +47,10 @@
 	Install	Установить
 	Update to {v}	Обновить до {v}
 	Open	Открыть
+	Open {version}	Открыть {version}
+	Open {installed} without updating. {latest} stays available.	Открыть {installed} без обновления. Версия {latest} останется доступной.
+	{latest} is out, but Atelier Gate can't install it over this copy.	Вышла версия {latest}, но Atelier Gate не может установить её поверх этой копии.
+	Atelier Gate can't install version {version} over this copy.	Atelier Gate не может установить версию {version} поверх этой копии.
 	Download for {os}	Скачать для {os}
 	Download	Скачать
 	Coming soon	Скоро
@@ -70,6 +74,13 @@
 	Show in Files	Показать в файловом менеджере
 	Reinstall	Переустановить
 	Uninstall…	Удалить…
+	Launch options…	Параметры запуска…
+	{name} launch options	Параметры запуска {name}
+	Flags added each time the app is opened	Флаги, добавляемые при каждом открытии приложения
+	Separate flags with spaces. Quote a value that has spaces in it.	Разделяйте флаги пробелами. Значение с пробелами заключите в кавычки.
+	A quote isn't closed.	Кавычка не закрыта.
+	{name} wasn't opened: a quote in its launch options isn't closed.	{name} не открыто: в параметрах запуска не закрыта кавычка.
+	Save	Сохранить
 	All releases	Все релизы
 	Atelier Gate {version} is available.	Доступен Atelier Gate {version}.
 	Dismiss	Закрыть
@@ -85,6 +96,7 @@
 	Atelier Gate {version}	Atelier Gate {version}
 	Only when I ask	Только по запросу
 	Automatically download and install updates	Автоматически скачивать и устанавливать обновления
+	Ask for permission once when updating all apps	Запрашивать разрешение один раз при обновлении всех приложений
 	Notify me when an installed app has an update	Уведомлять, когда у установленного приложения есть обновление
 	Include pre-releases (betas and release candidates)	Включать предварительные релизы (бета и RC)
 	Installing on Linux	Установка в Linux
@@ -155,6 +167,10 @@
 	Retry update to {version}	Повторить обновление до {version}
 	The download is still here. It's checked again, then installed.	Скачанный файл сохранён. Он будет проверен ещё раз, затем установлен.
 	Waiting for another app…	Ожидание другого приложения…
+	Waiting for another download…	Ожидание другой загрузки…
+	Simultaneous downloads	Одновременные загрузки
+	No limit	Без ограничений
+	Downloads running together share your connection, so each one is slower.	Одновременные загрузки делят ваше подключение, поэтому каждая идёт медленнее.
 	Waiting for other installs…	Ожидание других установок…
 
 # Package formats offered for download (PackageKind::label)
@@ -279,6 +295,7 @@ filter	Installed	Установлены
 
 # Message templates (@msg): toasts from the backend. {placeholders} match any text.
 @msg	Couldn't open {name}: {e}	Не удалось открыть {name}: {e}
+@msg	Atelier Gate couldn't start its window on {backend}: {e}	Не удалось открыть окно Atelier Gate на {backend}: {e}
 @msg	Download cancelled	Скачивание отменено
 @msg	{name} updated to {version}	Приложение {name} обновлено до {version}
 @msg	{name} installed: {version}	Приложение {name} установлено: {version}
@@ -355,6 +372,8 @@ filter	Installed	Установлены
 	Next picture (→)	Следующее изображение (→)
 	Loading pictures…	Загрузка изображений…
 	Pictures couldn't be loaded. Reopen this page to try again.	Не удалось загрузить изображения. Откройте страницу снова, чтобы повторить попытку.
+
+	Download size: {size}	Размер загрузки: {size}
 	Install folder	Папка установки
 	Default install folder	Папка установки по умолчанию
 	System default	По умолчанию в системе
@@ -399,3 +418,27 @@ column	Author	Автор
 	Migrate Flatpak bundles to ArtCraft OCI (experimental)	Переводить пакеты Flatpak на ArtCraft OCI (экспериментально)
 	On update, switch first party apps when the matching package is available. Otherwise, keep using bundles.	При обновлении переводить приложения ArtCraft на репозиторий, если доступен соответствующий пакет. Иначе продолжать использовать отдельные пакеты.
 	The OCI repository is a preview with GPG verification disabled.	Репозиторий OCI работает в предварительном режиме с отключённой проверкой GPG.
+	Version pinned to {version}. Click to unlock.	Версия закреплена на {version}. Нажмите, чтобы разблокировать.
+	Unlock version?	Разблокировать версию?
+	{app} is pinned to {version}. Follow the latest release instead?	Для {app} закреплена версия {version}. Перейти на последнюю версию?
+	Unlock	Разблокировать
+
+	AI agents	ИИ-агенты
+	While this is on, AI apps that use MCP, such as Claude, Cursor or LM Studio, can work with every installed Atelier app through one entry. While it is off, no agent can reach them, and the entries added here are removed.	Пока этот параметр включён, ИИ-приложения с поддержкой MCP, например Claude, Cursor или LM Studio, могут работать со всеми установленными приложениями Atelier через одну запись. Когда он выключен, ни один агент не получит к ним доступ, а добавленные здесь записи удаляются.
+	Quick install	Быстрая установка
+	Adds the Atelier apps to that client. Restart the client afterwards.	Добавляет приложения Atelier в этот клиент. Затем перезапустите клиент.
+	Other clients	Другие клиенты
+	Copy the configuration and paste it into the client's MCP settings.	Скопируйте конфигурацию и вставьте её в настройки MCP клиента.
+	Copy JSON	Копировать JSON
+	Copy for VS Code	Копировать для VS Code
+	Copy for Codex (TOML)	Копировать для Codex (TOML)
+	Configuration copied.	Конфигурация скопирована.
+	{client} loads its MCP servers only when it starts, so the Atelier apps appear after a restart. Restarting closes {client}, including a reply it is still writing.	{client} загружает MCP-серверы только при запуске, поэтому приложения Atelier появятся после перезапуска. Перезапуск закроет {client}, включая ответ, который он ещё пишет.
+	Restart {client}	Перезапустить {client}
+	Restarting {client}…	Перезапуск {client}…
+	The Atelier gateway (craft-ai-mcp) is not installed beside the launcher.	Шлюз Atelier (craft-ai-mcp) не установлен рядом с лаунчером.
+	Let AI agents use Atelier apps	Разрешить ИИ-агентам использовать приложения Atelier
+	Apps agents can reach: {count}	Приложения, доступные агентам: {count}
+	Added	Добавлено
+	Remove	Удалить
+	Add	Добавить

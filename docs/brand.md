@@ -22,10 +22,14 @@ User-Agent (`AtelierGate/<version>`), and the settings folder on macOS and Windo
 - Each app's releases come from the Nation's repo, `Aetherion-Nation-Builders/atelier-<app>`, and
   Gate updates itself from `atelier-gate`. Upstream installs from `storytold/<app>` and would
   replace Gate with ArtCraft Launcher on its first self-update.
+- No hosted catalog: upstream can swap its compiled-in app list at startup for a signed catalog
+  from getartcraft.com, which lists the storytold apps. `hosted_catalog::ENABLED` is off, so Gate
+  never asks for it and always shows its own list (`crates/core/catalog.toml`).
 - No release feed: upstream asks ArtCraft's service (`api.storyteller.ai`) first, which describes
   the storytold repos and carries ArtCraft's announcements. `feed::FEED_URL` is unset, so Gate asks
-  GitHub directly (hourly per app once everything has loaded). `ARTCRAFT_LAUNCHER_FEED_URL` still
-  points Gate at a feed if the Nation runs one.
+  GitHub directly (hourly per app once everything has loaded). `ARTCRAFT_LAUNCHER_FEED_URL` points Gate at a
+  feed if the Nation runs one (since upstream's November changes, only in builds with the
+  `local-mirror` feature).
 - A repo that can't be read (private, or with no published release) shows its app as "Coming
   soon". Gate installs nothing until the Atelier repos publish releases it can read.
 
@@ -43,7 +47,7 @@ file overrides it where they differ, e.g. on where downloads come from).
 
 | Place | File |
 |---|---|
-| Apps, repos, links, the feed | `crates/core/src/catalog.rs`, `crates/core/src/feed.rs` (`FEED_URL`), `crates/native/src/backend.rs` (`feed_url`) |
+| Apps, repos, links, the feed | `crates/core/catalog.toml` (the twelve apps and their pages, compiled in by `build.rs`), `crates/core/src/catalog.rs`, `crates/core/src/hosted_catalog.rs` (`ENABLED`), `crates/core/src/feed.rs` (`FEED_URL`), `crates/native/src/backend.rs` (`feed_url`) |
 | Header, footer, cards, Settings | `crates/ui-egui/src/views.rs`, `dialogs.rs`, `widgets.rs`, `icons.rs` (`gate_mark`) |
 | Translations | `crates/ui-egui/src/i18n/ru.tsv`, `zh-CN.tsv` |
 | Tray, window, notifications | `apps/artcraft-launcher/src/tray.rs`, `main.rs` |
