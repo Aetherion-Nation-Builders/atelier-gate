@@ -378,7 +378,7 @@ mod tests {
 
     #[test]
     fn gate_fetches_no_hosted_catalog() {
-        assert!(!ENABLED);
+        const { assert!(!ENABLED) };
         assert_eq!(apps().len(), SUITE.len());
     }
 
