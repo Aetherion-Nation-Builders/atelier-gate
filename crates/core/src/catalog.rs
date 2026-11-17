@@ -1,6 +1,8 @@
 //! Atelier: the twelve apps Atelier Gate knows about (each built on a Craft App; see docs/brand.md).
 //!
-//! The list is data so a later version can fetch it from an API; [`SUITE`] is the built-in copy.
+//! The list is data: `crates/core/catalog.toml`, compiled in as [`SUITE`] by `build.rs`. Upstream
+//! can replace it at startup with a signed catalog from its website; Gate doesn't
+//! ([`crate::hosted_catalog::ENABLED`]).
 //!
 //! Text here is English, the source the UI translates from: each `tagline` has a catalog row
 //! keyed by the app id (`tr_ctx(app.id, app.tagline)` in `ui-egui`).
@@ -28,6 +30,10 @@ pub struct CraftApp {
     /// keeps it. Atelier installers name the bundle after [`Self::product`]
     /// ([`Self::mac_bundle_names`]).
     pub upstream_name: &'static str,
+    /// The `.app` bundle stem on macOS when it differs from `name` (`Atelier Pigment` for
+    /// `Pigment`): what [`Self::mac_bundle_name`] reports, and the first of
+    /// [`Self::mac_bundle_names`].
+    pub mac_bundle_name: Option<&'static str>,
     /// What it's for, in a few words (English; the UI translates it by app id).
     pub tagline: &'static str,
     /// Brand colour (sRGB), for surfaces: getartcraft.com's `--app`.
@@ -73,10 +79,18 @@ impl CraftApp {
         format!("https://github.com/{}", self.repo)
     }
 
+    /// The primary `.app` bundle stem on macOS (`Atelier Pigment`).
+    pub fn mac_bundle_name(&self) -> &'static str {
+        self.mac_bundle_name.unwrap_or(self.name)
+    }
+
     /// The names its macOS app bundle may have, newest first, without `.app`: the Atelier name
     /// (`Atelier Pigment`), then upstream's (`PhotoCraft`), which earlier releases used.
-    pub fn mac_bundle_names(&self) -> [&'static str; 2] {
-        [self.product, self.upstream_name]
+    pub fn mac_bundle_names(&self) -> impl Iterator<Item = &'static str> + '_ {
+        let primary = self.mac_bundle_name.unwrap_or(self.product);
+        std::iter::once(primary)
+            .chain(std::iter::once(self.product).filter(move |&n| n != primary))
+            .chain(std::iter::once(self.upstream_name).filter(move |&n| n != primary && n != self.product))
     }
 
     /// The app's page on the Nation's site.
@@ -89,9 +103,18 @@ impl CraftApp {
         kind != crate::PackageKind::Dmg || self.mac_team.is_some() || INSTALLS_UNSIGNED_MAC_BUILDS
     }
 
+    /// Whether this app runs on the given operating system (every Atelier app runs everywhere;
+    /// upstream's ArtCraft Studio skipped FreeBSD).
+    pub fn runs_on(&self, os: crate::Os) -> bool {
+        match os {
+            crate::Os::FreeBsd => self.id != "artcraft",
+            _ => true,
+        }
+    }
+
     /// Bundle ids this app may be installed under, current first.
     pub fn bundle_ids(&self) -> impl Iterator<Item = String> + '_ {
-        std::iter::once(self.bundle_id()).chain(self.former_bundles.iter().map(|b| b.to_string()))
+        std::iter::once(self.bundle_id()).chain(self.former_bundles.iter().map(ToString::to_string))
     }
 
     /// Asset stems this app's releases may use, current first.
@@ -106,7 +129,7 @@ impl CraftApp {
     }
 
     pub fn by_id(id: &str) -> Option<&'static CraftApp> {
-        SUITE.iter().find(|a| a.id == id)
+        crate::hosted_catalog::apps().iter().find(|a| a.id == id)
     }
 }
 
@@ -129,6 +152,7 @@ const fn app(
         repo,
         former_ids: &[],
         former_names: &[],
+        mac_bundle_name: None,
         kind: AppKind::Official,
         publisher: "Aetherion Nation",
         msi_publisher: None,
@@ -140,103 +164,18 @@ const fn app(
     }
 }
 
-/// Atelier, in display order (upstream's order, which follows its website).
-pub const SUITE: [CraftApp; 12] = [
-    app(
-        "photocraft",
-        ["Pigment", "Atelier Pigment", "PhotoCraft"],
-        "Image editing",
-        [[0x2f, 0x7b, 0xf5], [0x1a, 0x5b, 0xc4], [0x7f, 0xb0, 0xff]],
-        "Aetherion-Nation-Builders/atelier-pigment",
-    ),
-    app(
-        "vectorcraft",
-        ["Quill", "Atelier Quill", "VectorCraft"],
-        "Vector illustration",
-        [[0xe8, 0x57, 0x3f], [0xb8, 0x3a, 0x24], [0xff, 0x8a, 0x70]],
-        "Aetherion-Nation-Builders/atelier-quill",
-    ),
-    app(
-        "filmcraft",
-        ["Reel", "Atelier Reel", "FilmCraft"],
-        "Video editing, color and sound",
-        [[0x8b, 0x5c, 0xf6], [0x6a, 0x3f, 0xd6], [0xb6, 0x9c, 0xff]],
-        "Aetherion-Nation-Builders/atelier-reel",
-    ),
-    app(
-        "lightcraft",
-        ["Lens", "Atelier Lens", "LightCraft"],
-        "Photo library and raw development",
-        [[0xf2, 0xa5, 0x16], [0x8a, 0x58, 0x00], [0xff, 0xc1, 0x4d]],
-        "Aetherion-Nation-Builders/atelier-lens",
-    ),
-    CraftApp {
-        former_ids: &["printcraft"],
-        former_names: &["PrintCraft"],
-        ..app(
-            "pdfcraft",
-            ["Seal", "Atelier Seal", "PdfCraft"],
-            "Reading, organizing and protecting PDFs",
-            [[0x12, 0xa5, 0x8a], [0x0a, 0x75, 0x63], [0x3f, 0xd6, 0xb8]],
-            "Aetherion-Nation-Builders/atelier-seal",
-        )
-    },
-    app(
-        "effectcraft",
-        ["Prism", "Atelier Prism", "EffectCraft"],
-        "Motion graphics and visual effects",
-        [[0xe0, 0x36, 0x8f], [0xb0, 0x20, 0x6c], [0xff, 0x7a, 0xb8]],
-        "Aetherion-Nation-Builders/atelier-prism",
-    ),
-    app(
-        "designcraft",
-        ["Press", "Atelier Press", "DesignCraft"],
-        "Page layout and publishing",
-        [[0x7b, 0xb5, 0x1c], [0x45, 0x70, 0x08], [0xa6, 0xe0, 0x4a]],
-        "Aetherion-Nation-Builders/atelier-press",
-    ),
-    app(
-        "wordcraft",
-        ["Scribe", "Atelier Scribe", "WordCraft"],
-        "Writing and document design",
-        [[0x3f, 0x5f, 0xe0], [0x2a, 0x44, 0xb8], [0x8e, 0xa2, 0xff]],
-        "Aetherion-Nation-Builders/atelier-scribe",
-    ),
-    app(
-        "soundcraft",
-        ["Frequency", "Atelier Frequency", "SoundCraft"],
-        "Recording, editing and mixing audio",
-        [[0x1f, 0xa5, 0xc9], [0x0e, 0x72, 0x90], [0x5f, 0xd0, 0xee]],
-        "Aetherion-Nation-Builders/atelier-frequency",
-    ),
-    app(
-        "deckcraft",
-        ["Podium", "Atelier Podium", "DeckCraft"],
-        "Presentations and slide shows",
-        [[0xf0, 0x7a, 0x1e], [0xa8, 0x4f, 0x0a], [0xff, 0xa0, 0x60]],
-        "Aetherion-Nation-Builders/atelier-podium",
-    ),
-    app(
-        "cadcraft",
-        ["Blueprint", "Atelier Blueprint", "CADCraft"],
-        "Computer-aided design and drafting",
-        [[0x3e, 0xa6, 0xe8], [0x1a, 0x6f, 0xa8], [0x7c, 0xc8, 0xff]],
-        "Aetherion-Nation-Builders/atelier-blueprint",
-    ),
-    app(
-        "gridcraft",
-        ["Ledger", "Atelier Ledger", "GridCraft"],
-        "Spreadsheets and data",
-        [[0x1f, 0x9d, 0x55], [0x12, 0x70, 0x3a], [0x4f, 0xd6, 0x8a]],
-        "Aetherion-Nation-Builders/atelier-ledger",
-    ),
-];
+// Atelier, in display order (upstream's order, which follows its website): from catalog.toml.
+include!(concat!(env!("OUT_DIR"), "/catalog.rs"));
 
 /// Atelier: the Nation's macOS releases carry no Developer ID signature yet, so Gate installs a
 /// DMG with no signing team ([`CraftApp::mac_team`] `None`) after checking the download's
 /// checksum and the bundle's id and version, as Atelier Gate always has. Upstream refuses such a
 /// build; turn this off (and record each app's team) once the Nation signs its releases.
 pub const INSTALLS_UNSIGNED_MAC_BUILDS: bool = true;
+
+/// Upstream's Apple Developer team (Learning Machines LLC), which signs the official Craft Apps.
+/// No Atelier app carries it (their `mac_team` is `None`); upstream's hosted-catalog checks name it.
+pub const ARTCRAFT_TEAM_ID: &str = "DJ6XS33FX8";
 
 /// The Nation's website.
 pub const WEBSITE_URL: &str = "https://www.aetherionnnation.com";
@@ -276,6 +215,9 @@ pub const LAUNCHER_ID: &str = "artcraft-launcher";
 /// An Atelier app's 128 px icon (PNG), in `assets/app-icons` (each Atelier app's own): the UI
 /// draws it, and the Linux install puts it in the desktop menu.
 pub fn app_icon_png(id: &str) -> Option<&'static [u8]> {
+    if let Some(icon) = crate::hosted_catalog::icon(id) {
+        return Some(icon);
+    }
     Some(match id {
         "photocraft" => include_bytes!("../../../assets/app-icons/photocraft.png"),
         "vectorcraft" => include_bytes!("../../../assets/app-icons/vectorcraft.png"),
@@ -327,6 +269,8 @@ mod tests {
             assert!(a.id.ends_with("craft"), "{}: machine names stay upstream's", a.id);
             assert_eq!(a.product, format!("Atelier {}", a.name));
             assert_eq!(a.upstream_name.to_lowercase(), a.id, "macOS bundles keep upstream's name");
+            assert_eq!(a.mac_bundle_name, Some(a.product));
+            assert_eq!(a.website(), format!("{WEBSITE_URL}/atelier/{}", a.name.to_lowercase()));
         }
         assert_eq!(LAUNCHER.repo, LAUNCHER_REPO);
     }
@@ -334,8 +278,12 @@ mod tests {
     #[test]
     fn macos_bundles_are_found_under_the_atelier_name_first() {
         let pigment = CraftApp::by_id("photocraft").unwrap();
-        assert_eq!(pigment.mac_bundle_names(), ["Atelier Pigment", "PhotoCraft"]);
-        assert_eq!(LAUNCHER.mac_bundle_names(), ["Atelier Gate", "ArtCraft Launcher"]);
+        assert_eq!(pigment.mac_bundle_name(), "Atelier Pigment");
+        assert_eq!(pigment.mac_bundle_names().collect::<Vec<_>>(), ["Atelier Pigment", "PhotoCraft"]);
+        assert_eq!(LAUNCHER.mac_bundle_names().collect::<Vec<_>>(), ["Atelier Gate", "ArtCraft Launcher"]);
+        for os in [crate::Os::FreeBsd, crate::Os::Linux, crate::Os::MacOs, crate::Os::Windows] {
+            assert!(SUITE.iter().all(|a| a.runs_on(os)));
+        }
     }
 
     #[test]

@@ -46,3 +46,11 @@ them.
 | `assets/app-icons/gridcraft.png` | Atelier Ledger app icon (hidden sun), 128 px | Atelier Ledger contributors (Aetherion Nation) | [`Aetherion-Nation-Builders/atelier-ledger`](https://github.com/Aetherion-Nation-Builders/atelier-ledger) `assets/app-icon/hicolor/128x128/apps/ai.storyteller.gridcraft.png`, copied unmodified | MIT OR Apache-2.0 (original work for Atelier; see that repository's `ATTRIBUTION.md`) |
 | `assets/app-icons/cadcraft.png` | Atelier Blueprint app icon (hidden sun), 128 px | Atelier Blueprint contributors (Aetherion Nation) | [`Aetherion-Nation-Builders/atelier-blueprint`](https://github.com/Aetherion-Nation-Builders/atelier-blueprint) `assets/app-icon/hicolor/128x128/apps/ai.storyteller.cadcraft.png`, copied unmodified | MIT OR Apache-2.0 (original work for Atelier; see that repository's `ATTRIBUTION.md`) |
 | `assets/app-icons/soundcraft.png` | Atelier Frequency app icon (hidden sun), 128 px | Atelier Frequency contributors (Aetherion Nation) | [`Aetherion-Nation-Builders/atelier-frequency`](https://github.com/Aetherion-Nation-Builders/atelier-frequency) `assets/app-icon/hicolor/128x128/apps/ai.storyteller.soundcraft.png`, copied unmodified | MIT OR Apache-2.0 (original work for Atelier; see that repository's `ATTRIBUTION.md`) |
+
+## Catalog data
+
+| Path | Title | Author | Source | License |
+|---|---|---|---|---|
+| `crates/core/catalog.toml` | Gate's bundled app catalog (the twelve Atelier apps) | Atelier Gate contributors (Aetherion Nation), from ArtCraft Launcher's catalog | Adapted from [`storytold/craft-launcher`](https://github.com/storytold/craft-launcher) `crates/core/catalog.toml` | MIT OR Apache-2.0 |
+| `crates/core/assets/launcher-catalog-public-key.pem` | ArtCraft Launcher's catalog Ed25519 verification key (kept for upstream's tests; Gate fetches no hosted catalog) | ArtCraft Team | [`storytold/craft-launcher`](https://github.com/storytold/craft-launcher) | MIT OR Apache-2.0 |
+| `crates/core/tests/fixtures/hosted-catalog.toml`, `crates/core/tests/fixtures/hosted-catalog.toml.sig` | ArtCraft Launcher's signed catalog and its signature (test fixtures) | ArtCraft Team | [`storytold/craft-launcher`](https://github.com/storytold/craft-launcher) | MIT OR Apache-2.0 |

@@ -1,1 +1,3 @@
 NOTICE merge=ours
+# Signatures verify exact bytes; checkout must not convert signed TOML to CRLF.
+/crates/core/tests/fixtures/hosted-catalog.toml -text
