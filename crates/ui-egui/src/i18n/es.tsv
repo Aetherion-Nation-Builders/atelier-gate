@@ -75,6 +75,7 @@
 	Show in Explorer	Mostrar en el Explorador
 	Show in Files	Mostrar en Archivos
 	Reinstall	Reinstalar
+	Add desktop shortcut	Añadir acceso directo al escritorio
 	Uninstall…	Desinstalar…
 	Launch options…	Opciones de inicio…
 	{name} launch options	Opciones de inicio de {name}
@@ -109,6 +110,7 @@
 	Running in the background	En segundo plano
 	Keep running in the tray when the window is closed	Seguir abierto en la bandeja del sistema al cerrar la ventana
 	Atelier Gate is still running	Atelier Gate sigue abierto
+	Hide Atelier Gate from the Dock while in the background	Ocultar Atelier Gate del Dock en segundo plano
 	It's in the tray: open it or quit it from the tray icon, or turn this off in the settings.	Está en la bandeja del sistema: ábrelo o ciérralo desde su icono, o desactiva esto en los ajustes.
 	Show the window on the current desktop	Mostrar la ventana en el escritorio actual
 	Start Atelier Gate when I log in	Abrir Atelier Gate al iniciar sesión
@@ -136,6 +138,8 @@
 	Pin to top	Fijar arriba
 	Unpin	Quitar fijación
 	Pinned	Fijadas
+	Pin {name} to top	Fijar {name} arriba
+	Unpin {name}	Quitar fijación de {name}
 	Reorder {name}	Reordenar {name}
 	Move up	Subir
 	Move down	Bajar
@@ -373,6 +377,9 @@ filter	Installed	Instaladas
 @msg	custom install folders aren't supported on this system	este sistema no admite carpetas de instalación personalizadas
 @msg	{path} already exists and wasn't installed by Atelier Gate	{path} ya existe y no fue instalado por Atelier Gate
 @msg	couldn't move {path} to Trash ({reason}). Remove it in Finder instead.	no se pudo mover {path} a la Papelera ({reason}). Elimínalo desde Finder.
+@msg	Desktop shortcut created for {name}	Acceso directo al escritorio creado para {name}
+@msg	Couldn't create the desktop shortcut: {e}	No se pudo crear el acceso directo al escritorio: {e}
+@msg	A desktop shortcut named {name} already exists	Ya existe un acceso directo al escritorio llamado {name}
 	Apps are placed inside this folder.	Las aplicaciones se guardan dentro de esta carpeta.
 	Replace what's there?	¿Reemplazar lo que hay?
 	{path} already exists. Installing {name} will overwrite it.	{path} ya existe. Instalar {name} lo sobrescribirá.

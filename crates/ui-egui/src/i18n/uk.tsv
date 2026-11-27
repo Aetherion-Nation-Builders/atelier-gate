@@ -70,6 +70,7 @@
 	Show in Explorer	Показати в Провіднику
 	Show in Files	Показати у файловому менеджері
 	Reinstall	Перевстановити
+	Add desktop shortcut	Додати ярлик на робочий стіл
 	Uninstall…	Видалити…
 	Launch options…	Параметри запуску…
 	{name} launch options	Параметри запуску {name}
@@ -101,6 +102,7 @@
 	Updates always use the format an app was installed with.	Оновлення завжди використовують формат, у якому застосунок було встановлено.
 	Running in the background	Робота у фоновому режимі
 	Keep running in the tray when the window is closed	Продовжувати роботу в треї після закриття вікна
+	Hide Atelier Gate from the Dock while in the background	Приховувати Atelier Gate з Dock під час роботи у фоновому режимі
 	It's in the tray: open it or quit it from the tray icon, or turn this off in the settings.	Він у треї: відкрийте або закрийте його через значок у треї або вимкніть це в налаштуваннях.
 	Show the window on the current desktop	Показувати вікно на поточному робочому столі
 	Community	Спільнота
@@ -130,6 +132,8 @@
 	Pin to top	Закріпити вгорі
 	Unpin	Відкріпити
 	Pinned	Закріплені
+	Pin {name} to top	Закріпити {name} вгорі
+	Unpin {name}	Відкріпити {name}
 	Reorder {name}	Змінити порядок: {name}
 	Move up	Вище
 	Move down	Нижче
@@ -363,6 +367,9 @@ filter	Installed	Встановлені
 @msg	this release has no AppImage for a custom install folder	у цьому випуску немає AppImage для власної папки встановлення
 @msg	custom install folders aren't supported on this system	ця система не підтримує власні папки встановлення
 @msg	couldn't move {path} to Trash ({reason}). Remove it in Finder instead.	не вдалося перемістити {path} у Кошик ({reason}). Натомість видаліть його у Finder.
+@msg	Desktop shortcut created for {name}	Ярлик на робочому столі для {name} створено
+@msg	Couldn't create the desktop shortcut: {e}	Не вдалося створити ярлик на робочому столі: {e}
+@msg	A desktop shortcut named {name} already exists	Ярлик на робочому столі з назвою {name} уже існує
 	Apps are placed inside this folder.	Застосунки розміщуються всередині цієї папки.
 	Replace what's there?	Замінити наявне?
 	{path} already exists. Installing {name} will overwrite it.	{path} уже існує. Встановлення {name} перезапише його.

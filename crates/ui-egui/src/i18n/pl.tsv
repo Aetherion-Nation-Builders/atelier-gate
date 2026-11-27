@@ -76,6 +76,7 @@
 	Show in Explorer	Pokaż w Eksploratorze plików
 	Show in Files	Pokaż w menedżerze plików
 	Reinstall	Przeinstaluj
+	Add desktop shortcut	Dodaj skrót na pulpicie
 	Uninstall…	Odinstaluj…
 	Launch options…	Opcje uruchamiania…
 	{name} launch options	Opcje uruchamiania aplikacji {name}
@@ -110,6 +111,7 @@
 	Running in the background	Działanie w tle
 	Keep running in the tray when the window is closed	Po zamknięciu okna działaj w zasobniku systemowym
 	Atelier Gate is still running	Atelier Gate nadal działa
+	Hide Atelier Gate from the Dock while in the background	Ukrywaj Atelier Gate w Docku podczas działania w tle
 	It's in the tray: open it or quit it from the tray icon, or turn this off in the settings.	Jest w zasobniku systemowym: otwórz go lub zamknij z jego ikony, albo wyłącz to w ustawieniach.
 	Show the window on the current desktop	Pokaż okno na bieżącym pulpicie
 	Start Atelier Gate when I log in	Uruchom Atelier Gate po zalogowaniu
@@ -138,6 +140,8 @@
 	Pin to top	Przypnij na górze
 	Unpin	Odepnij
 	Pinned	Przypięte
+	Pin {name} to top	Przypnij {name} na górze
+	Unpin {name}	Odepnij {name}
 	Reorder {name}	Zmień kolejność: {name}
 	Move up	W górę
 	Move down	W dół
@@ -394,6 +398,9 @@ filter	Installed	Zainstalowane
 @msg	custom install folders aren't supported on this system	własne foldery instalacji nie są obsługiwane w tym systemie
 @msg	{path} already exists and wasn't installed by Atelier Gate	{path} już istnieje i nie został zainstalowany przez Atelier Gate
 @msg	couldn't move {path} to Trash ({reason}). Remove it in Finder instead.	nie można przenieść {path} do Kosza ({reason}). Usuń go w Finderze.
+@msg	Desktop shortcut created for {name}	Utworzono skrót na pulpicie dla {name}
+@msg	Couldn't create the desktop shortcut: {e}	Nie można utworzyć skrótu na pulpicie: {e}
+@msg	A desktop shortcut named {name} already exists	Skrót na pulpicie o nazwie {name} już istnieje
 	Apps are placed inside this folder.	Aplikacje są umieszczane w tym folderze.
 	Replace what's there?	Zastąpić to, co tam jest?
 	{path} already exists. Installing {name} will overwrite it.	{path} już istnieje. Instalacja {name} go nadpisze.
