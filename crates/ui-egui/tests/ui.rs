@@ -2202,15 +2202,15 @@ fn pin_drag_accepts_the_table_grip_column() {
 fn pin_toggle_button_pins_and_unpins() {
     let (mut h, _) = harness(ViewMode::Grid, egui::Theme::Dark, true);
     h.run_steps(6);
-    h.get_by_label("Pin PhotoCraft to top").click();
+    h.get_by_label("Pin Pigment to top").click();
     h.run_steps(4);
     assert_eq!(h.state().as_ref().unwrap().settings.pinned, vec!["photocraft".to_string()]);
     h.get_by_label("Pinned");
-    assert!(h.query_by_label("Pin PhotoCraft to top").is_none());
-    h.get_by_label("Unpin PhotoCraft").click();
+    assert!(h.query_by_label("Pin Pigment to top").is_none());
+    h.get_by_label("Unpin Pigment").click();
     h.run_steps(4);
     assert!(h.state().as_ref().unwrap().settings.pinned.is_empty());
-    h.get_by_label("Pin PhotoCraft to top");
+    h.get_by_label("Pin Pigment to top");
 }
 
 #[test]
@@ -2221,10 +2221,10 @@ fn hidden_app_has_no_pin_toggle_button() {
     h.state_mut().as_mut().unwrap().settings.hidden.insert("photocraft".into());
     h.state_mut().as_mut().unwrap().settings.filter = artcraft_launcher_ui_egui::settings::Filter::Hidden;
     h.run_steps(4);
-    h.get_by_role_and_label(egui::accesskit::Role::Label, "PhotoCraft");
-    assert!(h.query_by_label("Pin PhotoCraft to top").is_none());
-    assert!(h.query_by_label("Unpin PhotoCraft").is_none());
-    h.get_by_label("More actions for PhotoCraft").click();
+    h.get_by_role_and_label(egui::accesskit::Role::Label, "Pigment");
+    assert!(h.query_by_label("Pin Pigment to top").is_none());
+    assert!(h.query_by_label("Unpin Pigment").is_none());
+    h.get_by_label("More actions for Pigment").click();
     h.run_steps(3);
     assert!(h.query_by_label("Pin to top").is_none());
 }
@@ -3197,7 +3197,7 @@ fn the_details_drawer_keeps_the_caption_buttons_under_it() {
     let (mut h, _) = harness_with_title_bar(events(), ViewMode::Grid, egui::Theme::Dark, true, 1.0, artcraft_launcher_ui_egui::TitleBar::Custom);
     h.run_steps(8);
     let close = h.get_by_label("Close").rect().center();
-    h.get_by_label("PhotoCraft details").click();
+    h.get_by_label("Pigment details").click();
     h.run_steps(10);
     let asked = click_at(&mut h, close);
     assert!(!asked.contains(&egui::ViewportCommand::Close), "the click reached the window's Close: {asked:?}");
@@ -3210,7 +3210,7 @@ fn the_details_drawer_keeps_the_caption_buttons_under_it() {
 fn the_enlarged_pictures_close_closes_the_picture_not_the_window() {
     let (mut h, _) = harness_with_title_bar(events(), ViewMode::Grid, egui::Theme::Dark, true, 1.0, artcraft_launcher_ui_egui::TitleBar::Custom);
     h.run_steps(8);
-    h.get_by_label("PhotoCraft details").click();
+    h.get_by_label("Pigment details").click();
     h.run_steps(10);
     h.get_by_label("Enlarge picture").click();
     h.run_steps(4);
@@ -3393,15 +3393,15 @@ fn details_drawer_hides_reorder_grip_for_pinned_apps() {
     h.run_steps(6);
     h.state_mut().as_mut().unwrap().settings.pin_app("photocraft");
     h.run_steps(4);
-    h.get_all_by_label_contains("Reorder PhotoCraft").next().expect("grid card still has a reorder grip");
-    h.get_by_label("PhotoCraft details").click();
+    h.get_all_by_label_contains("Reorder Pigment").next().expect("grid card still has a reorder grip");
+    h.get_by_label("Pigment details").click();
     h.run_steps(10);
     // Exactly one Reorder control remains (the grid card behind the drawer), not a second in details.
-    assert_eq!(h.query_all_by_label_contains("Reorder PhotoCraft").count(), 1, "details must not add a reorder grip");
+    assert_eq!(h.query_all_by_label_contains("Reorder Pigment").count(), 1, "details must not add a reorder grip");
     // Pin toggle still appears in both the card and the drawer.
-    assert!(h.query_all_by_label("Unpin PhotoCraft").count() >= 2);
+    assert!(h.query_all_by_label("Unpin Pigment").count() >= 2);
     // Prefer the details … control (last in the tree) over the grid card's.
-    h.get_all_by_label("More actions for PhotoCraft").last().expect("details more menu").click();
+    h.get_all_by_label("More actions for Pigment").last().expect("details more menu").click();
     h.run_steps(3);
     // Details … menu can Unpin, but Move up/down belong only on the list.
     h.get_by_label("Unpin");
